@@ -1,7 +1,8 @@
 Práctica PAINT
 =========================
 
-Este repositorio contiene la base para la práctica PAINT del curso 2016-2017.
+Este repositorio contiene la base para la práctica PAINT de la asignatura de Desarrollo de Interfaces, curso 2016-2017.
+
 
 ##Instrucciones:
 
