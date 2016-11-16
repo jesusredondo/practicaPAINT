@@ -14,7 +14,7 @@ Este repositorio contiene la base para la práctica PAINT de la asignatura de De
 	* Este alumno dará acceso al repositorio creado para los demás miembros.
 	* Ahora todos los componentes trabajarán sobre el mismo repositorio en remoto (en el lado servidor).
 
-4. (OPCIONAL : Se puntuará sobre 3 puntos): Una vez el grupo haya terminado sus modificaciones, éstas tendrán que ser actualizadas a mi repositorio base (jesusredondo/practicaPAINT). Para realizar dichas modificaciones. Vosotros seréis los encargados de hacer un MERGE(mezclar los datos de mi repositorio con el vuestro) de vuestro repositorio con el mío y después hacer un PULL REQUEST (pedir que los cambios de vuestro repositorio se apliquen al mío).
+4. (OPCIONAL : Se puntuará sobre 3 puntos): Una vez el grupo haya terminado sus modificaciones, éstas tendrán que ser actualizadas a mi repositorio base (jesusredondo/practicaPAINT). Para realizar dichas modificaciones. Vosotros seréis los encargados de hacer un MERGE de vuestro repositorio con el mío y después hacer un PULL REQUEST (pedir que los cambios de vuestro repositorio se apliquen al mío).
 No aceptaré PULL REQUESTS en los cuales yo tenga que hacer el MERGE.
 
 
