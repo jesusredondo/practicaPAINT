@@ -6,7 +6,7 @@ Este repositorio contiene la base para la práctica PAINT de la asignatura de De
 
 ##Instrucciones:
 
-1. Esta práctica se llevará a cabo en grupos de 2-3 participantes.
+1. Esta práctica se llevará a cabo en grupos de 2-3 participantes. Es obligatorio utilizar el **cliente oficial de GITHUB**. Si se utilizan otro tipo de clientes, no os puedo echar una mano.	 
 
 2. Para trabajar sobre el repositorio tenéis que hacer lo siguiente:
 	* **Uno** de los alumnos del grupo hace el Fork del repositorio.
