@@ -18,8 +18,10 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
@@ -37,7 +39,16 @@ public class VentanaPrincipal {
 	//AÃ‘ADE AQUÃ TU HERRAMIENTA;
 	//TODO: AÃ±adir la herramienta	
 	 
+	//Labels
+	JLabel labelTipoLetra;
+	JLabel labelEstiloLetra;
+	JLabel labelTamanioLetra;
 	
+	
+	//Listas
+	JComboBox<String> listaTipoLetra;
+	JComboBox<String> listaEstiloLetra;
+	JComboBox<String> listaTamanioLetra;
 	
 	
 	int herramientaActual = -1; //No hay nada por defecto.	
@@ -48,6 +59,7 @@ public class VentanaPrincipal {
 	//Paneles:
 	JPanel panelSuperior;
 	JPanel panelInferior;
+	JPanel panelTexto;
 	
 	
 	//Variables para dibujo
@@ -62,7 +74,7 @@ public class VentanaPrincipal {
 	JButton botonNuevo;
 	JButton botonBoligrafo;
 	JButton botonGoma;
-	
+	JButton botonTexto;
 	
 	//VARIABLES PROPIAS DE CADA GRUPO:
 	//Grupo JesÃºs:
@@ -169,22 +181,91 @@ public class VentanaPrincipal {
 		 */
 		//TODO: Insertar un botÃ³n e implementar mi herramienta.
 		
-		
-		
-		
-		
-		
-		
-		
+	
 		
 		//Un elemento que ocupe todo el espacio a la derecha:
 		JPanel panelEspacioDerecha = new JPanel();
 		settings = new GridBagConstraints();
-		settings.gridx = 5; /*** OJO ***/
+		settings.gridx = 6; /*** OJO ***/
 		settings.gridy = 0;
 		settings.weightx = 1;
 		panelSuperior.add(panelEspacioDerecha, settings);
 		
+		//*******************************************************************************
+		//PABLO Y RUBEN
+		//panel de texto y componente
+		panelTexto = new JPanel();
+		panelTexto.setLayout(new GridBagLayout());
+		panelTexto.setBorder(BorderFactory.createLineBorder(Color.BLACK,1));
+		
+		//Herramienta para crear texto
+		botonTexto = new JButton(cargarIconoBoton("Imagenes/texto.png"));
+		settings = new GridBagConstraints();
+		settings.gridx = 0;
+		settings.gridy = 0;
+		settings.gridheight = 2;
+		settings.fill = GridBagConstraints.BOTH;
+		settings.insets = new Insets(1, 1, 1, 1);
+		panelTexto.add(botonTexto, settings);		
+		
+		//labels del componente
+		labelEstiloLetra = new JLabel("Fuente");
+		settings = new GridBagConstraints();
+		settings.gridx = 1;
+		settings.gridy = 0;
+		settings.gridheight = 1;
+		settings.fill = GridBagConstraints.BOTH;
+		settings.insets = new Insets(1, 1, 1, 1);
+		panelTexto.add(labelEstiloLetra, settings);	
+		
+		labelTamanioLetra = new JLabel("Tamaño");
+		settings = new GridBagConstraints();
+		settings.gridx = 2;
+		settings.gridy = 0;
+		settings.gridheight = 1;
+		settings.insets = new Insets(1, 1, 1, 1);
+		panelTexto.add(labelTamanioLetra, settings);	
+		
+		labelTipoLetra = new JLabel("Tipo");
+		settings = new GridBagConstraints();
+		settings.gridx = 3;
+		settings.gridy = 0;
+		settings.gridheight = 1;
+		settings.insets = new Insets(1, 1, 1, 1);
+		panelTexto.add(labelTipoLetra, settings);	
+		
+		//jComboBox del componente
+		listaEstiloLetra = new JComboBox();
+		settings = new GridBagConstraints();
+		settings.gridx = 1;
+		settings.gridy = 1;
+		settings.gridheight = 1;
+		settings.insets = new Insets(1, 1, 1, 1);
+		panelTexto.add(listaEstiloLetra, settings);	
+		
+		listaTamanioLetra = new JComboBox();
+		settings = new GridBagConstraints();
+		settings.gridx = 2;
+		settings.gridy = 1;
+		settings.gridheight = 1;
+		settings.insets = new Insets(1, 1, 1, 1);
+		panelTexto.add(listaTamanioLetra, settings);	
+		
+		listaTipoLetra = new JComboBox();
+		settings = new GridBagConstraints();
+		settings.gridx = 3;
+		settings.gridy = 1;
+		settings.gridheight = 1;
+		settings.insets = new Insets(1, 1, 1, 1);
+		panelTexto.add(listaTipoLetra, settings);	
+		
+		settings = new GridBagConstraints();
+		settings.gridx = 5;
+		settings.gridy = 0;
+		settings.insets = new Insets(0, 10, 0, 0);
+		panelSuperior.add(panelTexto, settings);
+		
+		//**************************************************************************FIN PABLO Y RUBEN
 		
 		//***************************
 		//EL LIENZO DONDE PINTAMOS. 
@@ -197,7 +278,6 @@ public class VentanaPrincipal {
 		settings.gridy = 0;
 		panelInferior.add(lienzo, settings);
 		ventana.repaint();
-		
 		
 	}
 	
