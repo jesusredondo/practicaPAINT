@@ -47,6 +47,7 @@ public class VentanaPrincipal {
 	
 	//Paneles:
 	JPanel panelSuperior;
+	JPanel panelInferior;
 	
 	
 	//Variables para dibujo
@@ -94,6 +95,7 @@ public class VentanaPrincipal {
 				TitledBorder.CENTER, 
 				TitledBorder.TOP));
 		
+		
 		GridBagConstraints settings;
 		settings = new GridBagConstraints();
 		
@@ -103,6 +105,20 @@ public class VentanaPrincipal {
 		settings.ipady = 10;
 		settings.fill = GridBagConstraints.BOTH;
 		ventana.add(panelSuperior,settings);
+		
+		
+		//panel inferior
+		
+		panelInferior = new JPanel(new GridBagLayout());
+		
+		settings = new GridBagConstraints();
+		
+		settings.gridx = 0;
+		settings.gridy = 1;
+		settings.weightx = 1;
+		settings.weighty = 1;
+		settings.fill = GridBagConstraints.BOTH;
+		ventana.add(panelInferior, settings);
 		
 		//Botón nuevo
 		botonNuevo = new JButton(cargarIconoBoton("Imagenes/nuevo.png"));
@@ -178,11 +194,8 @@ public class VentanaPrincipal {
 		lienzo.setHorizontalAlignment(SwingConstants.CENTER);
 		settings = new GridBagConstraints();
 		settings.gridx = 0;
-		settings.gridy = 1;
-		settings.weightx = 1;
-		settings.weighty = 1;
-		settings.fill = GridBagConstraints.BOTH;
-		ventana.add(lienzo, settings);
+		settings.gridy = 0;
+		panelInferior.add(lienzo, settings);
 		ventana.repaint();
 		
 		
@@ -293,12 +306,12 @@ public class VentanaPrincipal {
 	 * El nuevo canvas se adapta al tamanio del lienzo.
 	 */
 	public void borrarCanvas(){
-		canvas = new BufferedImage(lienzo.getWidth(), lienzo.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		canvas = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		lienzo.setIcon(new ImageIcon(canvas));
 		
 		Graphics graficos = canvas.getGraphics();
 		graficos.setColor(selector2.getColor());
-		graficos.fillRect(0, 0, lienzo.getWidth(), lienzo.getHeight());
+		graficos.fillRect(0, 0, panelInferior.getWidth(), panelInferior.getHeight());
 		graficos.dispose();
 		lienzo.repaint();
 	}
