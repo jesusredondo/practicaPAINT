@@ -25,7 +25,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 
-public class VentanaPrincipal {
+public class VentanaPrincipal  {
 
 	final int strokeGOMA = 10;
 	
@@ -37,7 +37,6 @@ public class VentanaPrincipal {
 	final static int LINEA = 2;
 	//AÃ‘ADE AQUÃ� TU HERRAMIENTA;
 	//TODO: AÃ±adir la herramienta	
-	
 	
 	
 	
@@ -70,6 +69,14 @@ public class VentanaPrincipal {
 	//Grupo JesÃºs:
 	int xAnt;
 	int yAnt;
+	
+	//Grupo Linea:
+	int xLineaAnt;
+	int yLineaAnt;
+	int xLineaInicio;
+	int yLineaInicio ;
+
+	
 	
 	
 	//Constructor, marca el tamaÃ±o y el cierre del frame
@@ -241,14 +248,13 @@ public class VentanaPrincipal {
 		 */
 		botonBoligrafo.addActionListener(anadirListenerHerramienta(BOLIGRAFO));
 		botonGoma.addActionListener(anadirListenerHerramienta(GOMA));
-		botonLinea.addActionListener(anadirListenerHerramienta(LINEA));
+		botonLinea.addActionListener(anadirListenerHerramienta(LINEA));//Añade listener a la herramienta linea
 		//TODO: AÃ±adir nuevos listeners para las herramientas:
 		
 		
 		
 		
 		lienzo.addMouseListener(new MouseAdapter() {
-			
 			@Override
 			public void mousePressed(MouseEvent e) {
 				//Dependiendo de la herramienta...
@@ -262,7 +268,7 @@ public class VentanaPrincipal {
 					break;
 				
 				case LINEA:
-					// METODO
+					mousePressedLInea(e);
 					break;
 					
 				default:
@@ -283,7 +289,7 @@ public class VentanaPrincipal {
 					break;
 					
 				case LINEA:
-					// METODO
+					mouseReleasedLInea(e);
 					break;
 					
 				default:
@@ -292,6 +298,7 @@ public class VentanaPrincipal {
 				/** OJO **/
 				lienzo.repaint();
 			}
+
 			
 		});
 		
@@ -311,7 +318,7 @@ public class VentanaPrincipal {
 					break;
 					
 				case LINEA:
-					// METODO
+					mouseDraggedLInea(e);
 					break;	
 					
 				default:
@@ -320,6 +327,8 @@ public class VentanaPrincipal {
 				/** OJO **/
 				lienzo.repaint();
 			}
+
+			
 			
 		});
 		
@@ -434,4 +443,33 @@ public class VentanaPrincipal {
 	
 	
 	
+	
+	//Metodos para la herramienta linea	
+	private void mousePressedLInea(MouseEvent e){
+		
+		xLineaInicio= e.getX();
+		yLineaInicio = e.getY();
+		xLineaAnt=e.getX();
+		yLineaAnt=e.getY();
+	}
+	
+	private void mouseReleasedLInea(MouseEvent e)
+	{
+		Graphics graficos = canvas.getGraphics();
+		graficos.setColor(selector1.getColor());
+		graficos.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
+		graficos.dispose();
+	}
+	
+	private void mouseDraggedLInea(MouseEvent e) 
+	{
+		Graphics graficos = canvas.getGraphics();
+		graficos.setColor(selector2.getColor());
+		graficos.drawLine(xLineaInicio, yLineaInicio, xLineaAnt, yLineaAnt);		
+		graficos.setColor(selector1.getColor());
+		graficos.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
+		xLineaAnt=e.getX();
+		yLineaAnt=e.getY();
+		graficos.dispose();	
+	}
 }
