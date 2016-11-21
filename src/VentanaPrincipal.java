@@ -1,7 +1,10 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +28,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 
-public class VentanaPrincipal  {
+public class VentanaPrincipal {
 
 	final int strokeGOMA = 10;
 	
@@ -34,9 +37,10 @@ public class VentanaPrincipal  {
 	 */
 	final static int BOLIGRAFO = 0;
 	final static int GOMA = 1;
-	final static int LINEA = 2;
+	
 	//AÃ‘ADE AQUÃ� TU HERRAMIENTA;
 	//TODO: AÃ±adir la herramienta	
+	
 	
 	
 	
@@ -62,22 +66,24 @@ public class VentanaPrincipal  {
 	JButton botonNuevo;
 	JButton botonBoligrafo;
 	JButton botonGoma;
-	JButton botonLinea;
 	
 	
 	//VARIABLES PROPIAS DE CADA GRUPO:
 	//Grupo JesÃºs:
 	int xAnt;
 	int yAnt;
+	BufferedImage canvasMouseMotion;
+	BufferedImage canvasDibujado;
 	
 	//Grupo Linea:
-	int xLineaAnt;
-	int yLineaAnt;
-	int xLineaInicio;
-	int yLineaInicio ;
-
-	
-	
+		final static int LINEA = 2;
+		JButton botonLinea;
+		JButton botonLineadis;
+		JButton botonLineared;
+		int xLineaInicio;
+		int yLineaInicio ;
+		JPanel panelLinea;
+	//FinGrupoLinea	
 	
 	//Constructor, marca el tamaÃ±o y el cierre del frame
 	public VentanaPrincipal() {
@@ -173,22 +179,34 @@ public class VentanaPrincipal  {
 		settings.insets = new Insets(0, 10, 0, 0);
 		panelSuperior.add(botonGoma, settings);
 		
-		
-		// Herramienta de pintar linea
-		botonLinea = new JButton(cargarIconoBoton("Imagenes/linea.png"));
-		settings = new GridBagConstraints();
-		settings.gridx = 5;
-		settings.gridy = 0;
-		settings.insets = new Insets(0, 10, 0, 0);
-		panelSuperior.add(botonLinea, settings);
-		
 		/**
 		 * VUESTRAS HERRAMIENTAS AQUÃ�
 		 */
 		//TODO: Insertar un botÃ³n e implementar mi herramienta.
 		
+		// Herramienta de pintar linea
+		panelLinea= new JPanel();
+		settings = new GridBagConstraints();
+		settings.gridx = 5;
+		settings.gridy = 0;
+		settings.insets = new Insets(0, 10, 0, 0);
 		
 		
+		panelLinea.setLayout(new GridLayout(1,3));
+		botonLinea = new JButton(cargarIconoBoton("Imagenes/linea.png"));
+		botonLineadis = new JButton(cargarIconoBoton("Imagenes/linea.png"));
+		botonLineared = new JButton(cargarIconoBoton("Imagenes/linea.png"));
+		panelLinea.add(botonLinea);
+		panelLinea.add(botonLineadis);
+		panelLinea.add(botonLineared);
+		panelSuperior.add(panelLinea, settings);
+		/*
+		 * botonLinea = new JButton(cargarIconoBoton("Imagenes/linea.png"));
+		 * settings = new GridBagConstraints(); settings.gridx = 5;
+		 * settings.gridy = 0; settings.insets = new Insets(0, 10, 0, 0);
+		 * panelSuperior.add(botonLinea, settings);
+		 */
+		//Fin herramienta Linea
 		
 		
 		
@@ -198,7 +216,7 @@ public class VentanaPrincipal  {
 		//Un elemento que ocupe todo el espacio a la derecha:
 		JPanel panelEspacioDerecha = new JPanel();
 		settings = new GridBagConstraints();
-		settings.gridx = 6; /*** OJO ***/
+		settings.gridx =6; /*** OJO ***/
 		settings.gridy = 0;
 		settings.weightx = 1;
 		panelSuperior.add(panelEspacioDerecha, settings);
@@ -255,6 +273,7 @@ public class VentanaPrincipal  {
 		
 		
 		lienzo.addMouseListener(new MouseAdapter() {
+			
 			@Override
 			public void mousePressed(MouseEvent e) {
 				//Dependiendo de la herramienta...
@@ -265,15 +284,15 @@ public class VentanaPrincipal  {
 
 				case GOMA:
 					borraGoma(e);
-					break;
-				
+					
 				case LINEA:
 					mousePressedLInea(e);
 					break;
 					
 				default:
 					break;
-				}	
+				}
+				repintarLienzo();
 			}
 			
 			@Override
@@ -296,9 +315,14 @@ public class VentanaPrincipal  {
 					break;
 				}	
 				/** OJO **/
-				lienzo.repaint();
+				repintarLienzo();
 			}
-
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				borrarCanvasMouseMotion();
+				repintarLienzo();
+			}
 			
 		});
 		
@@ -313,22 +337,34 @@ public class VentanaPrincipal  {
 					mouseDraggedBoligrafo(e);
 					break;
 
-				case GOMA:
-					borraGoma(e);
-					break;
-					
 				case LINEA:
 					mouseDraggedLInea(e);
 					break;	
+					
+				case GOMA:
+					borraGoma(e);
+					break;
 					
 				default:
 					break;
 				}				
 				/** OJO **/
-				lienzo.repaint();
+				repintarLienzo();
 			}
-
 			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				switch (herramientaActual) {
+				case GOMA:
+					gomaMouseMoved(e);
+					break;
+				
+				default:
+					break;
+				}				
+				/** OJO **/
+				repintarLienzo();
+			}
 			
 		});
 		
@@ -344,13 +380,24 @@ public class VentanaPrincipal  {
 		canvas = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		lienzo.setIcon(new ImageIcon(canvas));
 		
-		Graphics graficos = canvas.getGraphics();
+		
+		canvasDibujado = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		borrarCanvasMouseMotion();
+		
+		//Modificado para el mouseMotion
+		Graphics graficos = canvasDibujado.getGraphics();
 		graficos.setColor(selector2.getColor());
 		graficos.fillRect(0, 0, panelInferior.getWidth(), panelInferior.getHeight());
 		graficos.dispose();
-		lienzo.repaint();
+		repintarLienzo();
+		
+		
 	}
 	
+	
+	public void borrarCanvasMouseMotion(){
+		canvasMouseMotion = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
+	}
 	
 	/**
 	 * MÃ©todo que nos devuelve un icono para la barra de herramientas superior.
@@ -416,7 +463,7 @@ public class VentanaPrincipal  {
 	 * @param e
 	 */
 	private void mouseDraggedBoligrafo(MouseEvent e){
-		Graphics graficos = canvas.getGraphics();
+		Graphics graficos = canvasDibujado.getGraphics();
 		graficos.setColor(selector1.getColor());
 		graficos.drawLine(xAnt, yAnt, e.getX(), e.getY());
 		graficos.dispose();
@@ -431,7 +478,7 @@ public class VentanaPrincipal  {
 	 * @param e
 	 */
 	private void borraGoma(MouseEvent e){
-		Graphics graficos = canvas.getGraphics();
+		Graphics graficos = canvasDibujado.getGraphics();
 		graficos.setColor(selector2.getColor());
 		graficos.fillOval(e.getX()-(strokeGOMA/2), 
 				e.getY()-(strokeGOMA/2), 
@@ -439,37 +486,89 @@ public class VentanaPrincipal  {
 				strokeGOMA);
 		graficos.dispose();
 	}
-		
+	
+	/**
+	 * MÃ©todo que pinta el movimiento de la goma de borrar. Este mÃ©todo utiliza un canvas auxiliar, de tal modo que no se pinte el canvas original
+	 * @param e
+	 */
+	private void gomaMouseMoved(MouseEvent e){
+		borrarCanvasMouseMotion();
+		Graphics graficos = canvasMouseMotion.getGraphics();
+		graficos.setColor(selector2.getColor());
+		graficos.fillOval(e.getX()-(strokeGOMA/2), 
+				e.getY()-(strokeGOMA/2), 
+				strokeGOMA, 
+				strokeGOMA);
+		graficos.dispose();
+	}
+	
+	/**
+	 * Con la inclusiÃ³n del canvas auxiliar para mouseMotion, el mÃ©todo repintarLienzo es necesario.
+	 * Lo que hace este mÃ©todo es pintar sobre el canvas otros dos BufferedImage:
+	 * 		--> canvasDibujado: Es el canvas en el cual se encuentran los dibujos. Estos siempre se mantienen a lo largo del tiempo.
+	 * 		--> canvasMouseMotion: Es el canvas que se refresca cada vez que se mueve el ratÃ³n
+	 */
+	private void repintarLienzo(){
+		Graphics graficos = canvas.getGraphics();
+		graficos.drawImage(canvasDibujado, 0, 0, null);
+		graficos.drawImage(canvasMouseMotion, 0, 0, null);
+		lienzo.repaint();
+	}
 	
 	
 	
-	
+
 	//Metodos para la herramienta linea	
 	private void mousePressedLInea(MouseEvent e){
-		
+		//Captura la posicion inicial de la linea
 		xLineaInicio= e.getX();
 		yLineaInicio = e.getY();
-		xLineaAnt=e.getX();
-		yLineaAnt=e.getY();
 	}
 	
 	private void mouseReleasedLInea(MouseEvent e)
 	{
-		Graphics graficos = canvas.getGraphics();
+		//Dibuja una linea al soltar el raton 
+		/*Graphics graficos = canvasDibujado.getGraphics();
 		graficos.setColor(selector1.getColor());
 		graficos.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
-		graficos.dispose();
+		graficos.dispose();*/	
+		Graphics graficos = canvasDibujado.getGraphics();
+		Graphics2D g2 = (Graphics2D) graficos;
+		BasicStroke stroke = new BasicStroke(3.0f,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,1f,new float[] {50, 3, 5, 5},2);
+		
+		g2.setStroke(stroke);
+		
+		g2.setColor(selector1.getColor());
+		g2.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
+		g2.dispose();
 	}
 	
 	private void mouseDraggedLInea(MouseEvent e) 
 	{
-		Graphics graficos = canvas.getGraphics();
-		graficos.setColor(selector2.getColor());
-		graficos.drawLine(xLineaInicio, yLineaInicio, xLineaAnt, yLineaAnt);		
+		//Muestra una linea al ir arrastrando el raton
+		/*borrarCanvasMouseMotion();
+		Graphics graficos = canvasMouseMotion.getGraphics();
 		graficos.setColor(selector1.getColor());
 		graficos.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
-		xLineaAnt=e.getX();
-		yLineaAnt=e.getY();
-		graficos.dispose();	
+		graficos.dispose();*/
+		borrarCanvasMouseMotion();
+		Graphics graficos = canvasMouseMotion.getGraphics();
+		Graphics2D g2 = (Graphics2D) graficos;
+		BasicStroke stroke = new BasicStroke(
+				3.0f,
+				BasicStroke.CAP_BUTT,
+				BasicStroke.JOIN_ROUND,
+				1f,
+				new float[] {50, 3, 5, 5},
+				2
+				);
+		
+		g2.setStroke(stroke);
+		g2.setColor(selector1.getColor());
+		g2.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
+		graficos.dispose();
+		
 	}
+	
+	
 }
