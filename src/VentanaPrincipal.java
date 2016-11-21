@@ -66,7 +66,8 @@ public class VentanaPrincipal {
 	int yAnt;
 
 	// Grupo spray
-	boolean sprayBotonPulsado;
+	static boolean sprayBotonPulsado;
+	pintaSpray spray;
 
 	// Constructor, marca el tamaÃ±o y el cierre del frame
 	public VentanaPrincipal() {
@@ -232,8 +233,9 @@ public class VentanaPrincipal {
 				case GOMA:
 					borraGoma(e);
 				case SPRAY:
+
 					sprayBotonPulsado = true;
-					spray(e);
+					sprayPressed(e);
 					break;
 				default:
 					break;
@@ -262,6 +264,8 @@ public class VentanaPrincipal {
 				/** OJO **/
 				lienzo.repaint();
 			}
+			
+			
 
 		});
 
@@ -277,9 +281,11 @@ public class VentanaPrincipal {
 
 				case GOMA:
 					borraGoma(e);
+					
 					break;
 				case SPRAY:
-					spray(e);
+					spray.cambiarCordenadas(e.getX(), e.getY());
+					
 					break;
 
 				default:
@@ -289,7 +295,16 @@ public class VentanaPrincipal {
 				lienzo.repaint();
 			}
 
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				
+			}
+			
+			
+
 		});
+		
+		
 
 	}
 
@@ -397,16 +412,12 @@ public class VentanaPrincipal {
 		graficos.dispose();
 	}
 
-	private void spray(MouseEvent e) {
 
-		Graphics graficos = canvas.getGraphics();
-		graficos.setColor(selector1.getColor());
-		while (sprayBotonPulsado) {
-			int aleX = (int) (Math.random() * 21) - 10;
-			int aleY = (int) (Math.random() * 21) - 10;
-			graficos.fillOval(e.getX() + aleX, e.getY() + aleY, 2, 2);
-		}
 
+	private void sprayPressed(MouseEvent e) {
+		spray = new pintaSpray(this, e);
+		spray.cambiarCordenadas(e.getX(), e.getY());
+		spray.start();
 	}
 
 }
