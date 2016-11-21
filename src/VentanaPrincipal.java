@@ -13,7 +13,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 
@@ -75,6 +74,8 @@ public class VentanaPrincipal {
 	//Grupo JesÃºs:
 	int xAnt;
 	int yAnt;
+	BufferedImage canvasMouseMotion;
+	BufferedImage canvasDibujado;
 	
 	//Grupo: Álvaro,Ivan y Sergio
 	JButton botonSeleccionarImagen;
@@ -267,7 +268,8 @@ public class VentanaPrincipal {
 					break;
 				default:
 					break;
-				}	
+				}
+				repintarLienzo();
 			}
 			
 			@Override
@@ -286,7 +288,13 @@ public class VentanaPrincipal {
 					break;
 				}	
 				/** OJO **/
-				lienzo.repaint();
+				repintarLienzo();
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				borrarCanvasMouseMotion();
+				repintarLienzo();
 			}
 			
 		});
@@ -312,7 +320,23 @@ public class VentanaPrincipal {
 					break;
 				}				
 				/** OJO **/
-				lienzo.repaint();
+				repintarLienzo();
+			}
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				switch (herramientaActual) {
+				case GOMA:
+					gomaMouseMoved(e);
+					break;
+				case INSERTAR_IMAGEN:
+					imagenMouseMoved(e);
+					break;
+				default:
+					break;
+				}				
+				/** OJO **/
+				repintarLienzo();
 			}
 			
 		});
@@ -329,13 +353,24 @@ public class VentanaPrincipal {
 		canvas = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		lienzo.setIcon(new ImageIcon(canvas));
 		
-		Graphics graficos = canvas.getGraphics();
+		
+		canvasDibujado = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		borrarCanvasMouseMotion();
+		
+		//Modificado para el mouseMotion
+		Graphics graficos = canvasDibujado.getGraphics();
 		graficos.setColor(selector2.getColor());
 		graficos.fillRect(0, 0, panelInferior.getWidth(), panelInferior.getHeight());
 		graficos.dispose();
-		lienzo.repaint();
+		repintarLienzo();
+		
+		
 	}
 	
+	
+	public void borrarCanvasMouseMotion(){
+		canvasMouseMotion = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
+	}
 	
 	/**
 	 * MÃ©todo que nos devuelve un icono para la barra de herramientas superior.
@@ -401,7 +436,7 @@ public class VentanaPrincipal {
 	 * @param e
 	 */
 	private void mouseDraggedBoligrafo(MouseEvent e){
-		Graphics graficos = canvas.getGraphics();
+		Graphics graficos = canvasDibujado.getGraphics();
 		graficos.setColor(selector1.getColor());
 		graficos.drawLine(xAnt, yAnt, e.getX(), e.getY());
 		graficos.dispose();
@@ -416,7 +451,7 @@ public class VentanaPrincipal {
 	 * @param e
 	 */
 	private void borraGoma(MouseEvent e){
-		Graphics graficos = canvas.getGraphics();
+		Graphics graficos = canvasDibujado.getGraphics();
 		graficos.setColor(selector2.getColor());
 		graficos.fillOval(e.getX()-(strokeGOMA/2), 
 				e.getY()-(strokeGOMA/2), 
@@ -441,7 +476,34 @@ public class VentanaPrincipal {
 			break;
 		default:
 			break;
+		 }
 		}
+	/**
+	 * Método que pinta el movimiento de la goma de borrar. Este método utiliza un canvas auxiliar, de tal modo que no se pinte el canvas original
+	 * @param e
+	 */
+	private void gomaMouseMoved(MouseEvent e){
+		borrarCanvasMouseMotion();
+		Graphics graficos = canvasMouseMotion.getGraphics();
+		graficos.setColor(selector2.getColor());
+		graficos.fillOval(e.getX()-(strokeGOMA/2), 
+				e.getY()-(strokeGOMA/2), 
+				strokeGOMA, 
+				strokeGOMA);
+		graficos.dispose();
+	}
+	
+	/**
+	 * Con la inclusión del canvas auxiliar para mouseMotion, el método repintarLienzo es necesario.
+	 * Lo que hace este método es pintar sobre el canvas otros dos BufferedImage:
+	 * 		--> canvasDibujado: Es el canvas en el cual se encuentran los dibujos. Estos siempre se mantienen a lo largo del tiempo.
+	 * 		--> canvasMouseMotion: Es el canvas que se refresca cada vez que se mueve el ratón
+	 */
+	private void repintarLienzo(){
+		Graphics graficos = canvas.getGraphics();
+		graficos.drawImage(canvasDibujado, 0, 0, null);
+		graficos.drawImage(canvasMouseMotion, 0, 0, null);
+		lienzo.repaint();
 	}
 	
 	private void buscarImagen(MouseEvent e){
@@ -462,11 +524,24 @@ public class VentanaPrincipal {
 		
 	}
 	
+	private void imagenMouseMoved(MouseEvent e){
+		if(img!=null){
+		borrarCanvasMouseMotion();
+		int x = e.getX()-(img.getWidth()/4);
+		int y = e.getY()-(img.getHeight()/4);
+		Graphics gra = canvasMouseMotion.getGraphics();
+		gra.drawImage(img.getScaledInstance(img.getWidth()/2, img.getHeight()/2, Image.SCALE_SMOOTH), x, y, null);
+		gra.dispose();
+		}
+		
+	}
+	
 	private void insertarImagen(MouseEvent e){
 		if(img!=null){
 			int x = e.getX()-(img.getWidth()/4);
 			int y = e.getY()-(img.getHeight()/4);
-			Graphics gra = canvas.getGraphics();
+			Graphics gra = canvasDibujado.getGraphics();
+			
 			gra.drawImage(img.getScaledInstance(img.getWidth()/2, img.getHeight()/2, Image.SCALE_SMOOTH), x, y, null);
 			gra.dispose();
 		}
