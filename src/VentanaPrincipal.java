@@ -55,12 +55,12 @@ public class VentanaPrincipal {
 
 	// Fuente para establecer el jtextField
 	Font fuente;
-	
-	//Color fuente
+
+	// Color fuente
 	Color colorFuente;
-	
+
 	// Listas componente texto
-	JComboBox comboBoxTipoLetra;
+	JComboBox comboBoxEstiloLetra;
 	JComboBox comboBoxFuenteLetra;
 	JComboBox comboBoxTamanioLetra;
 
@@ -213,6 +213,7 @@ public class VentanaPrincipal {
 
 		// Jtextfield para el texto
 		jtextFieldTexto = new JTextField();
+		jtextFieldTexto.setEditable(false); //por defecto
 		settings = new GridBagConstraints();
 		settings.gridwidth = 3;
 		settings.gridx = 1;
@@ -281,13 +282,13 @@ public class VentanaPrincipal {
 		settings.insets = new Insets(1, 1, 1, 1);
 		panelTexto.add(comboBoxTamanioLetra, settings);
 
-		comboBoxTipoLetra = new JComboBox(estiloLetra);
+		comboBoxEstiloLetra = new JComboBox(estiloLetra);
 		settings = new GridBagConstraints();
 		settings.gridx = 3;
 		settings.gridy = 2;
 		settings.gridheight = 1;
 		settings.insets = new Insets(1, 1, 1, 1);
-		panelTexto.add(comboBoxTipoLetra, settings);
+		panelTexto.add(comboBoxEstiloLetra, settings);
 
 		// insertar panel de texto en el panel superior
 		settings = new GridBagConstraints();
@@ -333,12 +334,12 @@ public class VentanaPrincipal {
 				borrarCanvas();
 			}
 		});
-
+		//pone a true o false el botonTexto para crear el texto
 		botonTexto.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				establecerFuenteCampoTexto(e);
+				establecerCampoTexto();
 			}
 		});
 
@@ -354,10 +355,10 @@ public class VentanaPrincipal {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// Dependiendo de la herramienta...
+				// al hacer clic pinta en el lienzo el texto del campo jtextfield
 				switch (herramientaActual) {
 				case TEXTO:
-					incluirCampotexto(e);
+					incluirCampoTexto(e);
 					break;
 				default:
 					break;
@@ -419,6 +420,35 @@ public class VentanaPrincipal {
 			}
 
 		});
+		//************LISTENER PARA COMBOBOX*************
+		// escucho el comboBox de la fuente de letra
+		comboBoxFuenteLetra.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				fuenteLetraComboBox = e.getItem().toString();
+				establecerFuenteCampoTexto();
+			}
+		});
+		// escucho el comboBox del tamanio de letra
+		comboBoxTamanioLetra.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				tamanioLetraComboBox = e.getItem().toString();
+				establecerFuenteCampoTexto();
+			}
+		});
+		// escucho el comboBox del estilo de letra
+		comboBoxEstiloLetra.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				estiloLetraComboBox = e.getItem().toString();
+				establecerFuenteCampoTexto();
+			}
+		});
+		//*************FIN LISTENER COMBOBOX**************************
 
 	}
 
@@ -525,12 +555,15 @@ public class VentanaPrincipal {
 		graficos.fillOval(e.getX() - (strokeGOMA / 2), e.getY() - (strokeGOMA / 2), strokeGOMA, strokeGOMA);
 		graficos.dispose();
 	}
+
 	/**
-	 * cuando se hace clic en el botonTexto se establece la fuente con el estilo, tipo y tamanio en el campo jtextField
-	 * asignar a la variable fuente sus valores
+	 * cuando se hace clic en el botonTexto se establece la fuente con el
+	 * estilo, tipo y tamanio en el campo jtextField asignar a la variable
+	 * fuente sus valores
+	 * 
 	 * @param e
 	 */
-	public void establecerFuenteCampoTexto(ActionEvent e) {
+	public void establecerFuenteCampoTexto() {
 		int tipofuente = 0;
 		
 		// por defecto se establece la fuente, tamaño y tipo de letra
@@ -543,33 +576,7 @@ public class VentanaPrincipal {
 		if (estiloLetraComboBox == null) {
 			estiloLetraComboBox = "" + 0;
 		}
-		// escucho el comboBox de fuente de letra
-		comboBoxFuenteLetra.addItemListener(new ItemListener() {
 
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				fuenteLetraComboBox = e.getItem().toString();
-
-			}
-		});
-		// escucho el comboBox del tamanio de letra
-		comboBoxTamanioLetra.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				tamanioLetraComboBox = e.getItem().toString();
-
-			}
-		});
-		// escucho el comboBox del tipo de letra
-		comboBoxTipoLetra.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				estiloLetraComboBox = e.getItem().toString();
-
-			}
-		});
 		// dependiendo del estilo de letra
 		switch (estiloLetraComboBox) {
 		case "Normal":
@@ -584,32 +591,49 @@ public class VentanaPrincipal {
 		}
 		// creamo una fuente nueva
 		fuente = new Font(fuenteLetraComboBox, tipofuente, Integer.parseInt(tamanioLetraComboBox));
+		//se asigna al jtextfield
 		jtextFieldTexto.setFont(fuente);
-		//cambiar el fondo de texto del jtextField
+		// cambiar el color de texto del jtextField
 		jtextFieldTexto.setForeground(selector1.getColor());
 
 	}
 
 	/**
-	 * Incluye en el lienzo la fuente elegida	 
-	 * @param e listener del boton
+	 * Si el jtextfiel es true incluye en el lienzo la fuente elegida
+	 * en las coordenadas dadas por el ratón 
+	 * @param e
 	 * 
 	 */
 	// incluir el campo texto en el lienzo
-	private void incluirCampotexto(MouseEvent e) {
-		Graphics graficos = canvas.getGraphics();
-		graficos.setColor(selector1.getColor());
-		graficos.setFont(fuente);
-		graficos.drawString(jtextFieldTexto.getText(), e.getX(), e.getY());
+	private void incluirCampoTexto(MouseEvent e) {
+		if (jtextFieldTexto.isEditable()) {
+			Graphics graficos = canvas.getGraphics();
+			graficos.setColor(selector1.getColor());
+			graficos.setFont(fuente);
+			graficos.drawString(jtextFieldTexto.getText(), e.getX(), e.getY());
+		}
 
 	}
-
+	/**
+	 * cambia el valor de editable del botonTexto
+	 */
+	public void establecerCampoTexto(){
+		if (jtextFieldTexto.isEditable()) {
+			jtextFieldTexto.setEditable(false);
+		}else{
+			jtextFieldTexto.setEditable(true);
+		}
+	}
+	/**
+	 * Crea un String[] de las fuentes del sistema
+	 * rellena el comboBoxFuenteLetra
+	 * @return
+	 */
 	private String[] fuentesLetras() {
 
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		String[] fuentes = ge.getAvailableFontFamilyNames();
 		return fuentes;
-		// comboBoxLetra = new JComboBox(fuentes);
 
 	}
 
