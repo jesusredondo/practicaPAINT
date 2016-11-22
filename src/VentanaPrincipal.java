@@ -8,12 +8,12 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-<<<<<<< HEAD
+
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-=======
+
 import java.awt.event.InputEvent;
->>>>>>> origin/master
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -35,24 +35,22 @@ import javax.sound.sampled.Line.Info;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-<<<<<<< HEAD
+
 import javax.swing.JComboBox;
-=======
->>>>>>> origin/master
+
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
-<<<<<<< HEAD
+
 import javax.swing.filechooser.FileNameExtensionFilter;
-=======
+
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 
->>>>>>> origin/master
 
 public class VentanaPrincipal {
 
@@ -63,24 +61,20 @@ public class VentanaPrincipal {
 	 */
 	final static int BOLIGRAFO = 0;
 	final static int GOMA = 1;
-<<<<<<< HEAD
+
 	// AÃ‘ADE AQUÃ� TU HERRAMIENTA;
 	// TODO: AÃ±adir la herramienta
 
 	int herramientaActual = -1; // No hay nada por defecto.
 
 	// La ventana principal, en este caso, guarda todos los componentes:
-=======
+
 	//AÃ‘ADE AQUÃ� TU HERRAMIENTA;
 	//TODO: AÃ±adir la herramienta	
 	final static int INSERTAR_IMAGEN = 2;
 	
 	
-	
-	int herramientaActual = -1; //No hay nada por defecto.	
-	
-	//La ventana principal, en este caso, guarda todos los componentes:
->>>>>>> origin/master
+
 	JFrame ventana;
 
 	// Paneles:
@@ -99,7 +93,7 @@ public class VentanaPrincipal {
 	JButton botonNuevo;
 	JButton botonBoligrafo;
 	JButton botonGoma;
-<<<<<<< HEAD
+
 	JButton botonImagen;
 
 	// Buffers para cargar la imagen
@@ -112,12 +106,7 @@ public class VentanaPrincipal {
 
 	// VARIABLES PROPIAS DE CADA GRUPO:
 	// Grupo JesÃºs:
-=======
-	
-	
-	//VARIABLES PROPIAS DE CADA GRUPO:
-	//Grupo JesÃºs:
->>>>>>> origin/master
+
 	int xAnt;
 	int yAnt;
 
@@ -138,14 +127,7 @@ public class VentanaPrincipal {
 	JButton botonSeleccionarImagen;
 	BufferedImage img;
 	
-	
-<<<<<<< HEAD
-	//Constructor, marca el tamaño y el cierre del frame
 
-=======
-	
-	//Constructor, marca el tamaÃ±o y el cierre del frame
->>>>>>> origin/master
 	public VentanaPrincipal() {
 		ventana = new JFrame();
 		ventana.setBounds(100, 50, 800, 600);
@@ -189,13 +171,9 @@ public class VentanaPrincipal {
 		settings.weighty = 1;
 		settings.fill = GridBagConstraints.BOTH;
 		ventana.add(panelInferior, settings);
-<<<<<<< HEAD
 
-		// BotÃ³n nuevo
-=======
-		
 		//BotÃ³n nuevo
->>>>>>> origin/master
+
 		botonNuevo = new JButton(cargarIconoBoton("Imagenes/nuevo.png"));
 		settings = new GridBagConstraints();
 		settings.gridx = 0;
@@ -220,14 +198,9 @@ public class VentanaPrincipal {
 		settings.insets = new Insets(0, 10, 0, 0);
 		settings.fill = GridBagConstraints.BOTH;
 		panelSuperior.add(selector2, settings);
-<<<<<<< HEAD
 
-		// Herramienta de bolÃ­grafo
-=======
-		
-		
 		//Herramienta de bolÃ­grafo
->>>>>>> origin/master
+
 		botonBoligrafo = new JButton(cargarIconoBoton("Imagenes/boligrafo.png"));
 		settings = new GridBagConstraints();
 		settings.gridx = 3;
@@ -246,19 +219,20 @@ public class VentanaPrincipal {
 		/**
 		 * VUESTRAS HERRAMIENTAS AQUÃ�
 		 */
-<<<<<<< HEAD
+
 		// TODO: Insertar un botÃ³n e implementar mi herramienta.
 
-		// Un elemento que ocupe todo el espacio a la derecha:
-		JPanel panelEspacioDerecha = new JPanel();
+		ComboGrosor = new JComboBox(opciones);
 		settings = new GridBagConstraints();
-		settings.gridx = 6;
-=======
-		//TODO: Insertar un botÃ³n e implementar mi herramienta.
+		settings.gridx = 5;/*** OJO ***/
+		settings.gridy = 0;
+		settings.insets = new Insets(0, 10, 0, 0);
+		panelSuperior.add(ComboGrosor,settings);
+		
 		
 		botonSeleccionarImagen = new JButton(cargarIconoBoton("Imagenes/Icono_imagen.png"));
 		settings = new GridBagConstraints();
-		settings.gridx = 5; /*** OJO ***/
+		settings.gridx = 6; /*** OJO ***/
 		settings.gridy = 0;
 		settings.insets = new Insets(0, 10, 0, 0);
 		panelSuperior.add(botonSeleccionarImagen, settings);
@@ -269,18 +243,12 @@ public class VentanaPrincipal {
 		//Un elemento que ocupe todo el espacio a la derecha:
 		JPanel panelEspacioDerecha = new JPanel();
 		settings = new GridBagConstraints();
-		settings.gridx = 6; /*** OJO ***/
->>>>>>> origin/master
+		settings.gridx = 7; /*** OJO ***/
 		settings.gridy = 0;
 		settings.weightx = 1;
 		panelSuperior.add(panelEspacioDerecha, settings);
 
-		ComboGrosor = new JComboBox(opciones);
-		settings = new GridBagConstraints();
-		settings.gridx = 5;
-		settings.gridy = 0;
-		settings.insets = new Insets(0, 10, 0, 0);
-		panelSuperior.add(ComboGrosor,settings);
+		
 		
 
 		// ***************************
@@ -311,17 +279,16 @@ public class VentanaPrincipal {
 				superGoma(Auxiliar.getSelectedItem().toString());
 				}
 		});
-		
-<<<<<<< HEAD
+
 		
 		
 		
 
 		// LÃ­stener de carga de VentanaPrincipal. Cuando se carga la pantalla
 		// es cuando se puede inicializar el canvas.
-=======
+
 		//LÃ­stener de carga de VentanaPrincipal. Cuando se carga la pantalla es cuando se puede inicializar el canvas.
->>>>>>> origin/master
+
 		ventana.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -341,16 +308,14 @@ public class VentanaPrincipal {
 		 */
 		botonBoligrafo.addActionListener(anadirListenerHerramienta(BOLIGRAFO));
 		botonGoma.addActionListener(anadirListenerHerramienta(GOMA));
-<<<<<<< HEAD
+
 		// TODO: AÃ±adir nuevos listeners para las herramientas:
 
-=======
+
 		//TODO: AÃ±adir nuevos listeners para las herramientas:
 		botonSeleccionarImagen.addActionListener(anadirListenerHerramienta(INSERTAR_IMAGEN));
 		
-		
-		
->>>>>>> origin/master
+
 		lienzo.addMouseListener(new MouseAdapter() {
 
 			@Override
@@ -379,11 +344,9 @@ public class VentanaPrincipal {
 				// Dependiendo de la herramienta...
 				switch (herramientaActual) {
 				case BOLIGRAFO:
-<<<<<<< HEAD
-					mouseDraggedBoligrafo(e); // Me vale este mÃ©todo
-=======
+
 					mouseDraggedBoligrafo(e); //Me vale este mÃ©todo
->>>>>>> origin/master
+
 					break;
 
 				case GOMA:
@@ -418,13 +381,11 @@ public class VentanaPrincipal {
 				case GOMA:
 					borraGoma(e);
 					break;
-<<<<<<< HEAD
 
-=======
 				case INSERTAR_IMAGEN:
 					insertarSeleccionarImagen(e);
 					break;
->>>>>>> origin/master
+
 				default:
 					break;
 				}
