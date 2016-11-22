@@ -71,6 +71,7 @@ public class VentanaPrincipal {
 	int xAnt;
 	int yAnt;
 
+
 	// Variables Grupo JFK, la K es david.
 	String[] rotacionNombres = { "90º Derecha", "90º Izquierda", "Girar 180º", "Voltear horizontalmente",
 			"Voltear verticalmente" };
@@ -80,6 +81,13 @@ public class VentanaPrincipal {
 	JButton rotarPersonalizado;
 
 	// Constructor, marca el tamaÃ±o y el cierre del frame
+
+	BufferedImage canvasMouseMotion;
+	BufferedImage canvasDibujado;
+	
+	
+	//Constructor, marca el tamaño y el cierre del frame
+
 	public VentanaPrincipal() {
 		ventana = new JFrame();
 		ventana.setBounds(100, 50, 800, 600);
@@ -259,6 +267,8 @@ public class VentanaPrincipal {
 				default:
 					break;
 				}
+				repintarLienzo();
+
 			}
 
 			// MousePressed Grupo JFK. La k es david
@@ -287,12 +297,18 @@ public class VentanaPrincipal {
 					break;
 				}
 				/** OJO **/
-				lienzo.repaint();
+				repintarLienzo();
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				borrarCanvasMouseMotion();
+				repintarLienzo();
 			}
 
 			private void mouseRelasedPintarRotarFinal(MouseEvent e) {
 
-				BufferedImage prueba = new BufferedImage(canvas.getWidth(), canvas.getHeight(), canvas.getType());
+				BufferedImage prueba = new BufferedImage(canvasDibujado.getWidth(), canvasDibujado.getHeight(), canvasDibujado.getType());
 
 				AffineTransform at = new AffineTransform();
 
@@ -308,14 +324,12 @@ public class VentanaPrincipal {
 
 				// draw the image
 				Graphics2D g2d = (Graphics2D) prueba.getGraphics();
-				g2d.drawImage(canvas, at, null);
+				g2d.drawImage(canvasDibujado, at, null);
 				borrarCanvas();
-				Graphics2D g2d2 = (Graphics2D) canvas.getGraphics();
+				Graphics2D g2d2 = (Graphics2D) canvasDibujado.getGraphics();
 				g2d2.drawImage(prueba, null, null);
 
-				lienzo.setIcon(new ImageIcon(canvas));
-
-				lienzo.repaint();
+				repintarLienzo();
 
 			}
 
@@ -343,14 +357,28 @@ public class VentanaPrincipal {
 					break;
 				}
 				/** OJO **/
-				lienzo.repaint();
+				repintarLienzo();
+			}
+			
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				switch (herramientaActual) {
+				case GOMA:
+					gomaMouseMoved(e);
+					break;
+					
+				default:
+					break;
+				}				
+				/** OJO **/
+				repintarLienzo();
 			}
 
 			// MouseDragged Grupo JFK. La k es david
 			private void mouseDraggedRotarPersonalizado(MouseEvent e) {
 				posicionRotarPersonalizadoDespues = e.getY();
 
-				BufferedImage prueba = new BufferedImage(canvas.getWidth(), canvas.getHeight(), canvas.getType());
+				BufferedImage prueba = new BufferedImage(canvasDibujado.getWidth(), canvasDibujado.getHeight(), canvasDibujado.getType());
 
 				AffineTransform at = new AffineTransform();
 
@@ -365,14 +393,12 @@ public class VentanaPrincipal {
 
 				// draw the image
 				Graphics2D g2d = (Graphics2D) prueba.getGraphics();
-				g2d.drawImage(canvas, at, null);
+				g2d.drawImage(canvasDibujado, at, null);
 				borrarCanvas();
-				Graphics2D g2d2 = (Graphics2D) canvas.getGraphics();
+				Graphics2D g2d2 = (Graphics2D) canvasDibujado.getGraphics();
 				g2d2.drawImage(prueba, null, null);
 
-				lienzo.setIcon(new ImageIcon(canvas));
-
-				lienzo.repaint();
+				repintarLienzo();
 
 			}
 
@@ -396,7 +422,7 @@ public class VentanaPrincipal {
 				switch (opcion) {
 				case "90º Derecha": {
 
-					BufferedImage prueba = new BufferedImage(canvas.getWidth(), canvas.getHeight(), canvas.getType());
+					BufferedImage prueba = new BufferedImage(canvasDibujado.getWidth(), canvasDibujado.getHeight(), canvasDibujado.getType());
 
 					AffineTransform at = new AffineTransform();
 
@@ -413,20 +439,18 @@ public class VentanaPrincipal {
 
 					// draw the image
 					Graphics2D g2d = (Graphics2D) prueba.getGraphics();
-					g2d.drawImage(canvas, at, null);
+					g2d.drawImage(canvasDibujado, at, null);
 					borrarCanvas();
-					Graphics2D g2d2 = (Graphics2D) canvas.getGraphics();
+					Graphics2D g2d2 = (Graphics2D) canvasDibujado.getGraphics();
 					g2d2.drawImage(prueba, null, null);
 
-					lienzo.setIcon(new ImageIcon(canvas));
-
-					lienzo.repaint();
+					repintarLienzo();
 
 					break;
 				}
 
 				case "90º Izquierda": {
-					BufferedImage prueba = new BufferedImage(canvas.getWidth(), canvas.getHeight(), canvas.getType());
+					BufferedImage prueba = new BufferedImage(canvasDibujado.getWidth(), canvasDibujado.getHeight(), canvasDibujado.getType());
 
 					AffineTransform at = new AffineTransform();
 
@@ -441,18 +465,16 @@ public class VentanaPrincipal {
 
 					// draw the image
 					Graphics2D g2d = (Graphics2D) prueba.getGraphics();
-					g2d.drawImage(canvas, at, null);
+					g2d.drawImage(canvasDibujado, at, null);
 					borrarCanvas();
-					Graphics2D g2d2 = (Graphics2D) canvas.getGraphics();
+					Graphics2D g2d2 = (Graphics2D) canvasDibujado.getGraphics();
 					g2d2.drawImage(prueba, null, null);
 
-					lienzo.setIcon(new ImageIcon(canvas));
-
-					lienzo.repaint();
+					repintarLienzo();
 					break;
 				}
 				case "Girar 180º": {
-					BufferedImage prueba = new BufferedImage(canvas.getWidth(), canvas.getHeight(), canvas.getType());
+					BufferedImage prueba = new BufferedImage(canvasDibujado.getWidth(), canvasDibujado.getHeight(), canvasDibujado.getType());
 
 					AffineTransform at = new AffineTransform();
 
@@ -467,37 +489,34 @@ public class VentanaPrincipal {
 
 					// draw the image
 					Graphics2D g2d = (Graphics2D) prueba.getGraphics();
-					g2d.drawImage(canvas, at, null);
+					g2d.drawImage(canvasDibujado, at, null);
 					borrarCanvas();
-					Graphics2D g2d2 = (Graphics2D) canvas.getGraphics();
+					Graphics2D g2d2 = (Graphics2D) canvasDibujado.getGraphics();
 					g2d2.drawImage(prueba, null, null);
 
-					lienzo.setIcon(new ImageIcon(canvas));
-
-					lienzo.repaint();
+					repintarLienzo();
 					break;
 				}
 				case "Voltear horizontalmente": {
-					BufferedImage flipped = new BufferedImage(canvas.getWidth(), canvas.getHeight(), canvas.getType());
-					AffineTransform tran = AffineTransform.getTranslateInstance(canvas.getWidth(), 0);
+					BufferedImage flipped = new BufferedImage(canvasDibujado.getWidth(), canvasDibujado.getHeight(), canvasDibujado.getType());
+					AffineTransform tran = AffineTransform.getTranslateInstance(canvasDibujado.getWidth(), 0);
 					AffineTransform flip = AffineTransform.getScaleInstance(-1d, 1d);
 					tran.concatenate(flip);
 
 					Graphics2D g = flipped.createGraphics();
 					g.setTransform(tran);
-					g.drawImage(canvas, 0, 0, null);
+					g.drawImage(canvasDibujado, 0, 0, null);
 					g.dispose();
 
-					Graphics2D g2 = canvas.createGraphics();
+					Graphics2D g2 = canvasDibujado.createGraphics();
 					g2.drawImage(flipped, 0, 0, null);
 
-					lienzo.setIcon(new ImageIcon(canvas));
-					lienzo.repaint();
+					repintarLienzo();
 
 					break;
 				}
 				case "Voltear verticalmente": {
-					flipVertical(canvas);
+					flipVertical(canvasDibujado);
 					break;
 				}
 
@@ -526,12 +545,27 @@ public class VentanaPrincipal {
 		canvas = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		lienzo.setIcon(new ImageIcon(canvas));
 
-		Graphics graficos = canvas.getGraphics();
+		//Graphics graficos = canvas.getGraphics();
+
+		
+		canvasDibujado = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		borrarCanvasMouseMotion();
+		
+		//Modificado para el mouseMotion
+		Graphics graficos = canvasDibujado.getGraphics();
+
 		graficos.setColor(selector2.getColor());
 		graficos.fillRect(0, 0, panelInferior.getWidth(), panelInferior.getHeight());
 		graficos.dispose();
-		lienzo.repaint();
+		repintarLienzo();
+		
+		
 	}
+
+	public void borrarCanvasMouseMotion(){
+		canvasMouseMotion = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
+	}
+	
 
 	/**
 	 * MÃ©todo que nos devuelve un icono para la barra de herramientas superior.
@@ -600,8 +634,10 @@ public class VentanaPrincipal {
 	 * 
 	 * @param e
 	 */
-	private void mouseDraggedBoligrafo(MouseEvent e) {
-		Graphics graficos = canvas.getGraphics();
+
+	private void mouseDraggedBoligrafo(MouseEvent e){
+		Graphics graficos = canvasDibujado.getGraphics();
+
 		graficos.setColor(selector1.getColor());
 		graficos.drawLine(xAnt, yAnt, e.getX(), e.getY());
 		graficos.dispose();
@@ -615,11 +651,42 @@ public class VentanaPrincipal {
 	 * 
 	 * @param e
 	 */
-	private void borraGoma(MouseEvent e) {
-		Graphics graficos = canvas.getGraphics();
+
+	private void borraGoma(MouseEvent e){
+		Graphics graficos = canvasDibujado.getGraphics();
 		graficos.setColor(selector2.getColor());
 		graficos.fillOval(e.getX() - (strokeGOMA / 2), e.getY() - (strokeGOMA / 2), strokeGOMA, strokeGOMA);
 		graficos.dispose();
 	}
 
+	
+	/**
+	 * Método que pinta el movimiento de la goma de borrar. Este método utiliza un canvas auxiliar, de tal modo que no se pinte el canvas original
+	 * @param e
+	 */
+	private void gomaMouseMoved(MouseEvent e){
+		borrarCanvasMouseMotion();
+		Graphics graficos = canvasMouseMotion.getGraphics();
+		graficos.setColor(selector2.getColor());
+		graficos.fillOval(e.getX()-(strokeGOMA/2), 
+				e.getY()-(strokeGOMA/2), 
+				strokeGOMA, 
+				strokeGOMA);
+		graficos.dispose();
+	}
+	
+	/**
+	 * Con la inclusión del canvas auxiliar para mouseMotion, el método repintarLienzo es necesario.
+	 * Lo que hace este método es pintar sobre el canvas otros dos BufferedImage:
+	 * 		--> canvasDibujado: Es el canvas en el cual se encuentran los dibujos. Estos siempre se mantienen a lo largo del tiempo.
+	 * 		--> canvasMouseMotion: Es el canvas que se refresca cada vez que se mueve el ratón
+	 */
+	private void repintarLienzo(){
+		Graphics graficos = canvas.getGraphics();
+		graficos.drawImage(canvasDibujado, 0, 0, null);
+		graficos.drawImage(canvasMouseMotion, 0, 0, null);
+		lienzo.repaint();
+	}
+	
+	
 }
