@@ -1,7 +1,10 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,12 +33,13 @@ public class VentanaPrincipal {
 	final int strokeGOMA = 10;
 	
 	/**
-	 * IMPORTANTE: CADA HERRAMIENTA TENDRÁ UN CÓDIGO ASOCIADO
+	 * IMPORTANTE: CADA HERRAMIENTA TENDRÃ� UN CÃ“DIGO ASOCIADO
 	 */
 	final static int BOLIGRAFO = 0;
 	final static int GOMA = 1;
-	//AÑADE AQUÍ TU HERRAMIENTA;
-	//TODO: Añadir la herramienta	
+	
+	//AÃ‘ADE AQUÃ� TU HERRAMIENTA;
+	//TODO: AÃ±adir la herramienta	
 	
 	
 	
@@ -65,14 +69,34 @@ public class VentanaPrincipal {
 	
 	
 	//VARIABLES PROPIAS DE CADA GRUPO:
-	//Grupo Jesús:
+	//Grupo JesÃºs:
 	int xAnt;
 	int yAnt;
 	BufferedImage canvasMouseMotion;
 	BufferedImage canvasDibujado;
 	
+
+	//Grupo Linea:
+		final static int LINEA = 2;
+		final static int CUADRADO = 3;
+		final static int CIRCULO= 4;
+		JButton botonLinea;
 	
+		JButton botonCuadrado;
+		JButton botonCirculo;
+		JButton botonContornoContinuo;
+		JButton botonContornoDiscontinuo;
+		int xLineaInicio;
+		int yLineaInicio ;
+		int tipolinea=1;//para el tipo de linea, continua o discontinua
+		JPanel panelLinea;
+		int xCuadrado,yCuadrado,x1Cuadrado,y1Cuadrado,x2Cuadrado,y2Cuadrado,altoCuadrado,anchoCuadrado;//para el circulo y cuadrado
+	//FinGrupoLinea	
+	
+	//Constructor, marca el tamaÃ±o y el cierre del frame
+
 	//Constructor, marca el tamaño y el cierre del frame
+
 	public VentanaPrincipal() {
 		ventana = new JFrame();
 		ventana.setBounds(100, 50, 800, 600);
@@ -80,7 +104,7 @@ public class VentanaPrincipal {
 	}
 	
 	/**
-	 * Método que inicializa todos los componentes de la ventana
+	 * MÃ©todo que inicializa todos los componentes de la ventana
 	 */
 	public void inicializarComponentes(){
 		
@@ -122,7 +146,7 @@ public class VentanaPrincipal {
 		settings.fill = GridBagConstraints.BOTH;
 		ventana.add(panelInferior, settings);
 		
-		//Botón nuevo
+		//BotÃ³n nuevo
 		botonNuevo = new JButton(cargarIconoBoton("Imagenes/nuevo.png"));
 		settings = new GridBagConstraints();
 		settings.gridx = 0;
@@ -150,7 +174,7 @@ public class VentanaPrincipal {
 		panelSuperior.add(selector2, settings);
 		
 		
-		//Herramienta de bolígrafo
+		//Herramienta de bolÃ­grafo
 		botonBoligrafo = new JButton(cargarIconoBoton("Imagenes/boligrafo.png"));
 		settings = new GridBagConstraints();
 		settings.gridx = 3;
@@ -167,12 +191,34 @@ public class VentanaPrincipal {
 		panelSuperior.add(botonGoma, settings);
 		
 		/**
-		 * VUESTRAS HERRAMIENTAS AQUÍ
+		 * VUESTRAS HERRAMIENTAS AQUÃ�
 		 */
-		//TODO: Insertar un botón e implementar mi herramienta.
+		//TODO: Insertar un botÃ³n e implementar mi herramienta.
+		
+		// Herramienta de pintar linea
+		panelLinea= new JPanel();
+		settings = new GridBagConstraints();
+		settings.gridx = 5;
+		settings.gridy = 0;
+		settings.insets = new Insets(0, 10, 0, 0);
 		
 		
+		panelLinea.setLayout(new GridLayout(1,5));
+		botonLinea = new JButton(cargarIconoBoton("Imagenes/lineaNormal.jpg"));
+		//botonLineadis = new JButton(cargarIconoBoton("Imagenes/linea.png"));
+		botonCuadrado = new JButton(cargarIconoBoton("Imagenes/ImagenCua.png"));
+		botonCirculo = new JButton(cargarIconoBoton("Imagenes/ImagenCirculo.png"));
+		botonContornoContinuo = new JButton(cargarIconoBoton("Imagenes/LineaContinua.png"));
+		botonContornoDiscontinuo = new JButton(cargarIconoBoton("Imagenes/LineaDiscontinua.png"));
+		panelLinea.add(botonLinea);
+		//panelLinea.add(botonLineadis);
+		panelLinea.add(botonCuadrado);
+		panelLinea.add(botonCirculo);
+		panelLinea.add(botonContornoContinuo);
+		panelLinea.add(botonContornoDiscontinuo);
+		panelSuperior.add(panelLinea, settings);
 		
+		//Fin herramienta Linea
 		
 		
 		
@@ -182,7 +228,7 @@ public class VentanaPrincipal {
 		//Un elemento que ocupe todo el espacio a la derecha:
 		JPanel panelEspacioDerecha = new JPanel();
 		settings = new GridBagConstraints();
-		settings.gridx = 5; /*** OJO ***/
+		settings.gridx =6; /*** OJO ***/
 		settings.gridy = 0;
 		settings.weightx = 1;
 		panelSuperior.add(panelEspacioDerecha, settings);
@@ -206,11 +252,11 @@ public class VentanaPrincipal {
 
 
 	/**
-	 * Método que inicializa todos los listeners del programa.
+	 * MÃ©todo que inicializa todos los listeners del programa.
 	 */
 	public void inicializarListeners(){
 		
-		//Lístener de carga de VentanaPrincipal. Cuando se carga la pantalla es cuando se puede inicializar el canvas.
+		//LÃ­stener de carga de VentanaPrincipal. Cuando se carga la pantalla es cuando se puede inicializar el canvas.
 		ventana.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -228,13 +274,32 @@ public class VentanaPrincipal {
 		
 		
 		/**
-		 * Cada nueva herramienta que añadas, tendrá un nuevo lístener:
+		 * Cada nueva herramienta que aÃ±adas, tendrÃ¡ un nuevo lÃ­stener:
 		 */
 		botonBoligrafo.addActionListener(anadirListenerHerramienta(BOLIGRAFO));
 		botonGoma.addActionListener(anadirListenerHerramienta(GOMA));
-		//TODO: Añadir nuevos listeners para las herramientas:
-		
-		
+		botonLinea.addActionListener(anadirListenerHerramienta(LINEA));//Añade listener a la herramienta linea
+		//botonLineadis.addActionListener(anadirListenerHerramienta(LINEADIS));//Añade listener a la herramienta linea discontinua
+		botonCuadrado.addActionListener(anadirListenerHerramienta(CUADRADO));//Añade listener a la herramienta cuadrado
+		botonCirculo.addActionListener(anadirListenerHerramienta(CIRCULO));//Añade listener a la herramienta cuadrado
+		//TODO: AÃ±adir nuevos listeners para las herramientas:
+		//Listeners para seleccionar el tipo de linea
+		botonContornoContinuo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tipolinea=1;
+				
+			}
+		});
+		botonContornoDiscontinuo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				tipolinea=2;
+				
+			}
+		});
 		
 		
 		lienzo.addMouseListener(new MouseAdapter() {
@@ -249,24 +314,50 @@ public class VentanaPrincipal {
 
 				case GOMA:
 					borraGoma(e);
+					
+				case LINEA:
+					mousePressedLInea(e);
+					break;
+				
+				case CUADRADO:
+					mousePressedCuadrado(e);
+					break;
+				case CIRCULO:
+					mousePressedCirculo(e);
+					break;
 				default:
 					break;
 				}
 				repintarLienzo();
 			}
 			
+			
+
+			
+
+
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				//Dependiendo de la herramienta...
 				switch (herramientaActual) {
 				case BOLIGRAFO:
-					mouseDraggedBoligrafo(e); //Me vale este método
+					mouseDraggedBoligrafo(e); //Me vale este mÃ©todo
 					break;
 
 				case GOMA:
 					borraGoma(e);
 					break;
 					
+				case LINEA:
+					mouseReleasedLInea(e);
+					break;
+				
+				case CUADRADO:
+					mouseReleasedCuadrado(e);
+					break;
+				case CIRCULO:
+					mouseReleasedCirculo(e);
+					break;
 				default:
 					break;
 				}	
@@ -274,6 +365,9 @@ public class VentanaPrincipal {
 				repintarLienzo();
 			}
 			
+
+	
+
 			@Override
 			public void mouseExited(MouseEvent e) {
 				borrarCanvasMouseMotion();
@@ -293,6 +387,16 @@ public class VentanaPrincipal {
 					mouseDraggedBoligrafo(e);
 					break;
 
+				case LINEA:
+					mouseDraggedLInea(e);
+					break;	
+				
+				case CUADRADO:
+					mouseDraggedCuadrado(e);
+					break;	
+				case CIRCULO:
+					mouseDraggedCirculo(e);
+					break;	
 				case GOMA:
 					borraGoma(e);
 					break;
@@ -303,20 +407,23 @@ public class VentanaPrincipal {
 				/** OJO **/
 				repintarLienzo();
 			}
-			
+
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				switch (herramientaActual) {
 				case GOMA:
 					gomaMouseMoved(e);
 					break;
-					
+
 				default:
 					break;
 				}				
 				/** OJO **/
 				repintarLienzo();
 			}
+
+
+		
 			
 		});
 		
@@ -325,7 +432,7 @@ public class VentanaPrincipal {
 	
 	
 	/**
-	 * Método que Borra el canvas para pintarlo completamente en Blanco.
+	 * MÃ©todo que Borra el canvas para pintarlo completamente en Blanco.
 	 * El nuevo canvas se adapta al tamanio del lienzo.
 	 */
 	public void borrarCanvas(){
@@ -352,10 +459,10 @@ public class VentanaPrincipal {
 	}
 	
 	/**
-	 * Método que nos devuelve un icono para la barra de herramientas superior.
-	 * NOTA: Sería conveniente colocar una imagen con fondo transparente y que sea cuadrada, para no estropear la interfaz.
+	 * MÃ©todo que nos devuelve un icono para la barra de herramientas superior.
+	 * NOTA: SerÃ­a conveniente colocar una imagen con fondo transparente y que sea cuadrada, para no estropear la interfaz.
 	 * @param rutaImagen: La ruta de la imagen.
-	 * @return El ImageIcon que se utilizará en un botón.
+	 * @return El ImageIcon que se utilizarÃ¡ en un botÃ³n.
 	 */
 	public ImageIcon cargarIconoBoton(String rutaImagen){
 		BufferedImage bufferAuxiliar = null;
@@ -369,7 +476,7 @@ public class VentanaPrincipal {
 	
 	
 	/**
-	 * Método que devuelve un actionListener que cambia la herramienta Actual a la que se pasa por parámetros
+	 * MÃ©todo que devuelve un actionListener que cambia la herramienta Actual a la que se pasa por parÃ¡metros
 	 * @param herramienta
 	 * @return Un action listener que cambia la herramienta actual. Se puede utilizar sobre los botones, por ejemplo.
 	 */
@@ -384,7 +491,7 @@ public class VentanaPrincipal {
 	
 	
 	/**
-	 * Método que realiza todas las llamadas necesarias para inicializar la ventana correctamente.
+	 * MÃ©todo que realiza todas las llamadas necesarias para inicializar la ventana correctamente.
 	 */
 	public void inicializar(){
 		ventana.setVisible(true);
@@ -396,7 +503,7 @@ public class VentanaPrincipal {
 	
 	/*****************************************
 	 *****************************************
-	 * AQUÍ VAN LOS MÉTODOS DE LOS LISTENERS:
+	 * AQUÃ� VAN LOS MÃ‰TODOS DE LOS LISTENERS:
 	 *****************************************
 	 *****************************************/
 	
@@ -411,7 +518,7 @@ public class VentanaPrincipal {
 	}
 	
 	/**
-	 * Pinta la línea del bolígrafo al arrastrar.
+	 * Pinta la lÃ­nea del bolÃ­grafo al arrastrar.
 	 * @param e
 	 */
 	private void mouseDraggedBoligrafo(MouseEvent e){
@@ -426,7 +533,7 @@ public class VentanaPrincipal {
 	
 	
 	/**
-	 * Borra donde esté el ratón.
+	 * Borra donde estÃ© el ratÃ³n.
 	 * @param e
 	 */
 	private void borraGoma(MouseEvent e){
@@ -438,6 +545,7 @@ public class VentanaPrincipal {
 				strokeGOMA);
 		graficos.dispose();
 	}
+
 	
 	/**
 	 * Método que pinta el movimiento de la goma de borrar. Este método utiliza un canvas auxiliar, de tal modo que no se pinte el canvas original
@@ -468,4 +576,131 @@ public class VentanaPrincipal {
 	}
 	
 	
+
+	//Metodos para la herramienta linea	
+	private void mousePressedLInea(MouseEvent e){
+		//Captura la posicion inicial de la linea
+		xLineaInicio= e.getX();
+		yLineaInicio = e.getY();
+	}
+	
+	private void mouseReleasedLInea(MouseEvent e)
+	{
+		//Dibuja una linea al soltar el raton 
+		Graphics graficos = canvasDibujado.getGraphics();
+		Graphics2D g2 = (Graphics2D) graficos;
+		BasicStroke stroke = tipoLinea(tipolinea);	
+		g2.setStroke(stroke);
+		g2.setColor(selector1.getColor());
+		g2.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
+		g2.dispose();
+	}
+	
+	private void mouseDraggedLInea(MouseEvent e) 
+	{
+		//Muestra una linea al ir arrastrando el raton
+		
+		borrarCanvasMouseMotion();
+		Graphics graficos = canvasMouseMotion.getGraphics();
+		Graphics2D g2 = (Graphics2D) graficos;
+		BasicStroke stroke = tipoLinea(tipolinea);
+		g2.setStroke(stroke);
+		g2.setColor(selector1.getColor());
+		g2.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
+		graficos.dispose();
+	}
+	
+	//Medodos de la herramienta cuadrado
+	
+	private void mousePressedCuadrado(MouseEvent e) {//Captura las posiciones iniciales del raton
+		x1Cuadrado = e.getX();
+        y1Cuadrado = e.getY();  
+        x2Cuadrado=x1Cuadrado;
+        y2Cuadrado=y1Cuadrado;		
+	}	
+	private void mouseReleasedCuadrado(MouseEvent e) {//Pinta un cuadrado cuando se suelta el raton
+		Graphics graficos = canvasDibujado.getGraphics();
+		Graphics2D g2 = (Graphics2D) graficos;
+		BasicStroke stroke = tipoLinea(tipolinea);	
+		g2.setStroke(stroke);
+		g2.setColor(selector1.getColor());
+		g2.drawRect(xCuadrado, yCuadrado, anchoCuadrado, altoCuadrado);
+		g2.dispose();
+	}
+	private void mouseDraggedCuadrado(MouseEvent e) {//Va mostrando un cuadrado cuando se arrastra el raton		
+		x2Cuadrado = e.getX();//Captura las posiciones actuales
+		y2Cuadrado = e.getY();      
+        anchoCuadrado = Math.abs(x1Cuadrado - x2Cuadrado);//Calcula el ancho y el alto y devuelve un valor absoluto para que no sea negativo
+        altoCuadrado = Math.abs(  y1Cuadrado - y2Cuadrado );
+        xCuadrado = (x1Cuadrado - x2Cuadrado) < 0 ? x1Cuadrado : x2Cuadrado;  //controla que el cuadrado pueda ir en todas direcciones          
+        yCuadrado = (y1Cuadrado - y2Cuadrado) < 0 ? y1Cuadrado : y2Cuadrado;     
+        borrarCanvasMouseMotion();
+		Graphics graficos = canvasMouseMotion.getGraphics();
+		Graphics2D g2 = (Graphics2D) graficos;
+		BasicStroke stroke = tipoLinea(tipolinea);	
+		g2.setStroke(stroke);
+		g2.setColor(selector1.getColor());
+		g2.drawRect(xCuadrado, yCuadrado, anchoCuadrado, altoCuadrado);
+		g2.dispose();
+		
+	}
+	//Metodos comunes a linea y cuadrado
+	public BasicStroke tipoLinea(int tipolinea)//Permite pintar la linea o el cuadrado con linea continua o discontinua
+	{
+		BasicStroke stroke = null;
+		switch(tipolinea)//Dependiendo del tipo de linea elegida pintara lina continua o discontinua
+		{
+			case 1:
+			{
+				stroke = new BasicStroke(3.0f,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND);//Linea continua
+				break;
+			}	
+			case 2:
+			{
+				stroke = new BasicStroke(3.0f,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,1f,new float[] {10, 10, 10, 10},2);//Linea discontinua
+				break;
+			}
+		}
+		return stroke;
+	}
+	//Metodos de la herramienta circulo
+	private void mousePressedCirculo(MouseEvent e) {//Captura las posiciones iniciales del raton
+		x1Cuadrado = e.getX();//valen las mismas variables que para el circulo
+        y1Cuadrado = e.getY();  
+        x2Cuadrado=x1Cuadrado;
+        y2Cuadrado=y1Cuadrado;	
+		
+	}
+
+	private void mouseReleasedCirculo(MouseEvent e) {//Pinta un circulo en el canvas al soltar el raton
+		Graphics graficos = canvasDibujado.getGraphics();
+		Graphics2D g2 = (Graphics2D) graficos;
+		BasicStroke stroke = tipoLinea(tipolinea);	
+		g2.setStroke(stroke);
+		g2.setColor(selector1.getColor());		
+		g2.drawOval(xCuadrado, yCuadrado, anchoCuadrado, altoCuadrado);
+		g2.dispose();
+		
+	}
+	
+	
+	private void mouseDraggedCirculo(MouseEvent e) {//Pinta un circulo al arrastrar el raton
+		x2Cuadrado = e.getX();//Captura las posiciones actuales
+		y2Cuadrado = e.getY();      
+        anchoCuadrado = Math.abs(x1Cuadrado - x2Cuadrado);//Calcula el ancho y el alto y devuelve un valor absoluto para que no sea negativo
+        altoCuadrado = Math.abs(  y1Cuadrado - y2Cuadrado );
+        xCuadrado = (x1Cuadrado - x2Cuadrado) < 0 ? x1Cuadrado : x2Cuadrado;  //controla que el cuadrado pueda ir en todas direcciones          
+        yCuadrado = (y1Cuadrado - y2Cuadrado) < 0 ? y1Cuadrado : y2Cuadrado;     
+        borrarCanvasMouseMotion();
+		Graphics graficos = canvasMouseMotion.getGraphics();
+		Graphics2D g2 = (Graphics2D) graficos;
+		BasicStroke stroke = tipoLinea(tipolinea);	
+		g2.setStroke(stroke);
+		g2.setColor(selector1.getColor());
+		g2.drawOval(xCuadrado, yCuadrado, anchoCuadrado, altoCuadrado);
+		g2.dispose();
+		
+	}
+
+
 }
