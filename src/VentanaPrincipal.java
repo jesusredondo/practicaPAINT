@@ -77,12 +77,15 @@ public class VentanaPrincipal {
 	
 	//Grupo Linea:
 		final static int LINEA = 2;
+		final static int LINEADIS = 3;
+		final static int CUADRADO = 4;
 		JButton botonLinea;
 		JButton botonLineadis;
-		JButton botonLineared;
+		JButton botonCuadrado;
 		int xLineaInicio;
 		int yLineaInicio ;
 		JPanel panelLinea;
+		int xCuadrado,yCuadrado,x1Cuadrado,y1Cuadrado,x2Cuadrado,y2Cuadrado,altoCuadrado,anchoCuadrado;
 	//FinGrupoLinea	
 	
 	//Constructor, marca el tamaÃ±o y el cierre del frame
@@ -195,10 +198,10 @@ public class VentanaPrincipal {
 		panelLinea.setLayout(new GridLayout(1,3));
 		botonLinea = new JButton(cargarIconoBoton("Imagenes/linea.png"));
 		botonLineadis = new JButton(cargarIconoBoton("Imagenes/linea.png"));
-		botonLineared = new JButton(cargarIconoBoton("Imagenes/linea.png"));
+		botonCuadrado = new JButton(cargarIconoBoton("Imagenes/linea.png"));
 		panelLinea.add(botonLinea);
 		panelLinea.add(botonLineadis);
-		panelLinea.add(botonLineared);
+		panelLinea.add(botonCuadrado);
 		panelSuperior.add(panelLinea, settings);
 		/*
 		 * botonLinea = new JButton(cargarIconoBoton("Imagenes/linea.png"));
@@ -267,6 +270,8 @@ public class VentanaPrincipal {
 		botonBoligrafo.addActionListener(anadirListenerHerramienta(BOLIGRAFO));
 		botonGoma.addActionListener(anadirListenerHerramienta(GOMA));
 		botonLinea.addActionListener(anadirListenerHerramienta(LINEA));//Añade listener a la herramienta linea
+		botonLineadis.addActionListener(anadirListenerHerramienta(LINEADIS));//Añade listener a la herramienta linea discontinua
+		botonCuadrado.addActionListener(anadirListenerHerramienta(CUADRADO));//Añade listener a la herramienta linea discontinua
 		//TODO: AÃ±adir nuevos listeners para las herramientas:
 		
 		
@@ -289,12 +294,20 @@ public class VentanaPrincipal {
 					mousePressedLInea(e);
 					break;
 					
+				case LINEADIS:
+					mousePressedLInea(e);
+					break;
+				case CUADRADO:
+					mousePressedCuadrado(e);
+					break;
 				default:
 					break;
 				}
 				repintarLienzo();
 			}
 			
+			
+
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				//Dependiendo de la herramienta...
@@ -308,9 +321,14 @@ public class VentanaPrincipal {
 					break;
 					
 				case LINEA:
-					mouseReleasedLInea(e);
+					mouseReleasedLInea(e,LINEA);
 					break;
-					
+				case LINEADIS:
+					mouseReleasedLInea(e,LINEADIS);
+					break;
+				case CUADRADO:
+					mouseReleasedCuadrado(e);
+					break;
 				default:
 					break;
 				}	
@@ -318,6 +336,10 @@ public class VentanaPrincipal {
 				repintarLienzo();
 			}
 			
+			
+
+
+
 			@Override
 			public void mouseExited(MouseEvent e) {
 				borrarCanvasMouseMotion();
@@ -338,9 +360,14 @@ public class VentanaPrincipal {
 					break;
 
 				case LINEA:
-					mouseDraggedLInea(e);
+					mouseDraggedLInea(e,LINEA);
 					break;	
-					
+				case LINEADIS:
+					mouseDraggedLInea(e,LINEADIS);
+					break;
+				case CUADRADO:
+					mouseDraggedCuadrado(e);
+					break;	
 				case GOMA:
 					borraGoma(e);
 					break;
@@ -352,19 +379,22 @@ public class VentanaPrincipal {
 				repintarLienzo();
 			}
 			
+			
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				switch (herramientaActual) {
 				case GOMA:
 					gomaMouseMoved(e);
 					break;
-				
 				default:
 					break;
 				}				
 				/** OJO **/
 				repintarLienzo();
 			}
+
+
+		
 			
 		});
 		
@@ -525,50 +555,83 @@ public class VentanaPrincipal {
 		yLineaInicio = e.getY();
 	}
 	
-	private void mouseReleasedLInea(MouseEvent e)
+	private void mouseReleasedLInea(MouseEvent e, int tipolinea)
 	{
 		//Dibuja una linea al soltar el raton 
-		/*Graphics graficos = canvasDibujado.getGraphics();
-		graficos.setColor(selector1.getColor());
-		graficos.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
-		graficos.dispose();*/	
 		Graphics graficos = canvasDibujado.getGraphics();
 		Graphics2D g2 = (Graphics2D) graficos;
-		BasicStroke stroke = new BasicStroke(3.0f,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,1f,new float[] {50, 3, 5, 5},2);
-		
+		BasicStroke stroke = tipoLinea(tipolinea);	
 		g2.setStroke(stroke);
-		
 		g2.setColor(selector1.getColor());
 		g2.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
 		g2.dispose();
 	}
 	
-	private void mouseDraggedLInea(MouseEvent e) 
+	private void mouseDraggedLInea(MouseEvent e, int tipolinea) 
 	{
 		//Muestra una linea al ir arrastrando el raton
-		/*borrarCanvasMouseMotion();
-		Graphics graficos = canvasMouseMotion.getGraphics();
-		graficos.setColor(selector1.getColor());
-		graficos.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
-		graficos.dispose();*/
+		
 		borrarCanvasMouseMotion();
 		Graphics graficos = canvasMouseMotion.getGraphics();
 		Graphics2D g2 = (Graphics2D) graficos;
-		BasicStroke stroke = new BasicStroke(
-				3.0f,
-				BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_ROUND,
-				1f,
-				new float[] {50, 3, 5, 5},
-				2
-				);
-		
+		BasicStroke stroke = tipoLinea(tipolinea);
 		g2.setStroke(stroke);
 		g2.setColor(selector1.getColor());
 		g2.drawLine(xLineaInicio, yLineaInicio, e.getX(), e.getY());
 		graficos.dispose();
-		
 	}
 	
+	//Medodos de la herramienta cuadrado
 	
+	private void mousePressedCuadrado(MouseEvent e) {//Captura las posiciones iniciales del raton
+		x1Cuadrado = e.getX();
+        y1Cuadrado = e.getY();  
+        x2Cuadrado=x1Cuadrado;
+        y2Cuadrado=y1Cuadrado;		
+	}	
+	private void mouseReleasedCuadrado(MouseEvent e) {//Pinta un cuadrado cuando se suelta el raton
+		Graphics graficos = canvasDibujado.getGraphics();
+		Graphics2D g2 = (Graphics2D) graficos;
+		BasicStroke stroke = new BasicStroke(3.0f,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND);
+		g2.setStroke(stroke);
+		g2.setColor(selector1.getColor());
+		g2.drawRect(xCuadrado, yCuadrado, anchoCuadrado, altoCuadrado);
+		g2.dispose();
+	}
+	private void mouseDraggedCuadrado(MouseEvent e) {//Va mostrando un cuadrado cuando se arrastra el raton		
+		x2Cuadrado = e.getX();//Captura las posiciones actuales
+		y2Cuadrado = e.getY();      
+        anchoCuadrado = Math.abs(x1Cuadrado - x2Cuadrado);//Calcula el ancho y el alto y devuelve un valor absoluto para que no sea negativo
+        altoCuadrado = Math.abs(  y1Cuadrado - y2Cuadrado );
+        xCuadrado = (x1Cuadrado - x2Cuadrado) < 0 ? x1Cuadrado : x2Cuadrado;  //controla que el cuadrado pueda ir en todas direcciones          
+        yCuadrado = (y1Cuadrado - y2Cuadrado) < 0 ? y1Cuadrado : y2Cuadrado;     
+        borrarCanvasMouseMotion();
+		Graphics graficos = canvasMouseMotion.getGraphics();
+		Graphics2D g2 = (Graphics2D) graficos;
+		BasicStroke stroke = new BasicStroke(3.0f,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND);
+		g2.setStroke(stroke);
+		g2.setColor(selector1.getColor());
+		g2.drawRect(xCuadrado, yCuadrado, anchoCuadrado, altoCuadrado);
+		g2.dispose();
+		
+	}
+	//Metodos comunes a linea y cuadrado
+	public BasicStroke tipoLinea(int tipolinea)//Permite pintar la linea o el cuadrado con linea continua o discontinua
+	{
+		BasicStroke stroke = null;
+		switch(tipolinea)//Dependiendo del tipo de linea elegida pintara lina continua o discontinua
+		{
+			case 2:
+			{
+				stroke = new BasicStroke(3.0f,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND);//Linea continua
+				break;
+			}	
+			case 3:
+			{
+				stroke = new BasicStroke(3.0f,BasicStroke.CAP_BUTT,BasicStroke.JOIN_ROUND,1f,new float[] {10, 10, 10, 10},2);//Linea discontinua
+				break;
+			}
+		}
+		return stroke;
+	}
 }
