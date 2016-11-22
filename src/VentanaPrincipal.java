@@ -36,8 +36,7 @@ public class VentanaPrincipal {
 	 */
 	final static int BOLIGRAFO = 0;
 	final static int GOMA = 1;
-	// AÃ‘ADE AQUÃ� TU HERRAMIENTA;
-	// TODO: AÃ±adir la herramienta
+	// NUESTRA HERRAMIENTA
 	final static int POLIGONO = 2;
 
 	int herramientaActual = -1; // No hay nada por defecto.
@@ -162,12 +161,7 @@ public class VentanaPrincipal {
 		settings.insets = new Insets(0, 10, 0, 0);
 		panelSuperior.add(botonGoma, settings);
 
-		/**
-		 * VUESTRAS HERRAMIENTAS AQUÃ�
-		 */
-		// TODO: Insertar un botÃ³n e implementar mi herramienta.
-
-		// NuestraHerramienta
+		/* NUESTRA HERRAMIENTA */
 
 		botonPoligono = new JButton(cargarIconoBoton("Imagenes/poligono.png"));
 		settings = new GridBagConstraints();
@@ -224,7 +218,8 @@ public class VentanaPrincipal {
 		 */
 		botonBoligrafo.addActionListener(anadirListenerHerramienta(BOLIGRAFO));
 		botonGoma.addActionListener(anadirListenerHerramienta(GOMA));
-		// TODO: AÃ±adir nuevos listeners para las herramientas:
+
+		// AÑADIMOS LOS LISTENERS A NUESTRO BOTON
 		botonPoligono.addActionListener(anadirListenerHerramienta(POLIGONO));
 
 		botonPoligono.addActionListener(new ActionListener() {
@@ -232,7 +227,7 @@ public class VentanaPrincipal {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					int lados=0;
+					int lados = 0;
 					do {
 						lados = Integer.parseInt(JOptionPane.showInputDialog("Introduce un número de lados"));
 					} while (lados < 3);
@@ -329,7 +324,9 @@ public class VentanaPrincipal {
 					borraGoma(e);
 					break;
 
-				case POLIGONO:
+				case POLIGONO:// AÑADIMOS LA FUNCIONALIDAD DE QUE EL POLÍGONO SE
+								// PINTE MIENTRAS SE ARRASTRA EL RATÓN CON EL
+								// BOTÓN PULSADO
 					arrastrarPoligono(e);
 					break;
 				default:
@@ -346,7 +343,8 @@ public class VentanaPrincipal {
 					gomaMouseMoved(e);
 					break;
 
-				case POLIGONO:
+				case POLIGONO:// AÑADIMOS LA FUNCIONALIDAD DE QUE EL POLÍGONO
+								// APAREZCA JUNTO AL PUNTERO DEL RATÓN
 					poligonoMouseMoved(e);
 					break;
 
@@ -449,9 +447,53 @@ public class VentanaPrincipal {
 		yAnt = e.getY();
 	}
 
-	/* Pinta el polígno */
+	/* Pinta el polígno cuando se presiona */
 
 	private void mousePressedPolygono(MouseEvent e) {
+
+		int aux1 = e.getX();
+		int aux2 = e.getY();
+		for (int i = 0; i < x.length; i++) {
+			x[i] += aux1;
+			y[i] += aux2;
+
+		}
+		Graphics graficos = canvasDibujado.getGraphics();
+		graficos.setColor(selector1.getColor());
+
+		graficos.drawPolygon(x, y, x.length);
+		graficos.dispose();
+		for (int i = 0; i < x.length; i++) {
+			x[i] -= aux1;
+			y[i] -= aux2;
+
+		}
+
+	}
+
+	// Aparece el polígono con el ratón después de crearlo
+	private void poligonoMouseMoved(MouseEvent e) {
+		borrarCanvasMouseMotion();
+		int aux1 = e.getX();
+		int aux2 = e.getY();
+		for (int i = 0; i < x.length; i++) {
+			x[i] += aux1;
+			y[i] += aux2;
+
+		}
+		Graphics graficos = canvasMouseMotion.getGraphics();
+		graficos.setColor(selector1.getColor());
+		graficos.drawPolygon(x, y, x.length);
+		graficos.dispose();
+		for (int i = 0; i < x.length; i++) {
+			x[i] -= aux1;
+			y[i] -= aux2;
+
+		}
+	}
+
+	// Se pinta el polígono mientras se arrastra el ratón con el botón pulsado
+	private void arrastrarPoligono(MouseEvent e) {
 		System.out.println("Pintando");
 		int aux1 = e.getX();
 		int aux2 = e.getY();
@@ -512,48 +554,6 @@ public class VentanaPrincipal {
 		graficos.setColor(selector2.getColor());
 		graficos.fillOval(e.getX() - (strokeGOMA / 2), e.getY() - (strokeGOMA / 2), strokeGOMA, strokeGOMA);
 		graficos.dispose();
-	}
-
-	private void poligonoMouseMoved(MouseEvent e) {
-		borrarCanvasMouseMotion();
-		int aux1 = e.getX();
-		int aux2 = e.getY();
-		for (int i = 0; i < x.length; i++) {
-			x[i] += aux1;
-			y[i] += aux2;
-
-		}
-		Graphics graficos = canvasMouseMotion.getGraphics();
-		graficos.setColor(selector1.getColor());
-		graficos.drawPolygon(x, y, x.length);
-		graficos.dispose();
-		for (int i = 0; i < x.length; i++) {
-			x[i] -= aux1;
-			y[i] -= aux2;
-
-		}
-	}
-
-	private void arrastrarPoligono(MouseEvent e) {
-		System.out.println("Pintando");
-		int aux1 = e.getX();
-		int aux2 = e.getY();
-		for (int i = 0; i < x.length; i++) {
-			x[i] += aux1;
-			y[i] += aux2;
-
-		}
-		Graphics graficos = canvasDibujado.getGraphics();
-		graficos.setColor(selector1.getColor());
-
-		graficos.drawPolygon(x, y, x.length);
-		graficos.dispose();
-		for (int i = 0; i < x.length; i++) {
-			x[i] -= aux1;
-			y[i] -= aux2;
-
-		}
-
 	}
 
 	/**
