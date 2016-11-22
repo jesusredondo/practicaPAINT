@@ -53,8 +53,10 @@ public class VentanaPrincipal {
 	JLabel labelFuenteLetra;
 	JLabel labelTamanioLetra;
 
-	// Fuente para establecer el jtextField
+	// Fuente para establecer la fuente en el lienzo
+	// fuente auxiliar se genera solo para el campo jtextfield con un numero fijo de tamaño de letra
 	Font fuente;
+	Font fuenteAux;
 
 	// Color fuente
 	Color colorFuente;
@@ -273,7 +275,7 @@ public class VentanaPrincipal {
 
 		}
 		comboBoxTamanioLetra = new JComboBox(tamanioLetra);
-		comboBoxTamanioLetra.setSelectedIndex(11); // sale por defecto el tamaño
+		comboBoxTamanioLetra.setSelectedIndex(16); // sale por defecto el tamaño
 													// 12
 		settings = new GridBagConstraints();
 		settings.gridx = 2;
@@ -591,8 +593,9 @@ public class VentanaPrincipal {
 		}
 		// creamo una fuente nueva
 		fuente = new Font(fuenteLetraComboBox, tipofuente, Integer.parseInt(tamanioLetraComboBox));
+		fuenteAux = new Font(fuenteLetraComboBox, tipofuente, 16);
 		//se asigna al jtextfield
-		jtextFieldTexto.setFont(fuente);
+		jtextFieldTexto.setFont(fuenteAux);
 		// cambiar el color de texto del jtextField
 		jtextFieldTexto.setForeground(selector1.getColor());
 
