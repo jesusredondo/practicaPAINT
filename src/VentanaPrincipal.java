@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
@@ -43,27 +45,33 @@ public class VentanaPrincipal {
 	// AÃ‘ADE AQUÃ TU HERRAMIENTA;
 	// TODO: AÃ±adir la herramienta
 
-	//JTextField para introducir el texto
+	// JTextField para introducir el texto
 	JTextField jtextFieldTexto;
-	
+
 	// Labels
-	JLabel labelTipoLetra;
 	JLabel labelEstiloLetra;
+	JLabel labelFuenteLetra;
 	JLabel labelTamanioLetra;
 
-	// Listas
+	// Fuente para establecer el jtextField
+	Font fuente;
+	
+	//Color fuente
+	Color colorFuente;
+	
+	// Listas componente texto
 	JComboBox comboBoxTipoLetra;
 	JComboBox comboBoxFuenteLetra;
 	JComboBox comboBoxTamanioLetra;
-	
-	//variables dinamicas, escuchas de los comboBox
-	String tipoLetraComboBox;
+
+	// variables dinamicas, escuchas de los comboBox
+	String estiloLetraComboBox;
 	String fuenteLetraComboBox;
 	String tamanioLetraComboBox;
 
-	//Relleno ComboBox estilo de letra 0,1,2
-	String[]  estiloLetra = {"Normal","Negrita","Curisva"};
-	
+	// Relleno ComboBox estilo de letra 0,1,2
+	String[] estiloLetra = { "Normal", "Negrita", "Curisva" };
+
 	// Relleno ComoboBox tamaño de letra
 	String[] tamanioLetra;
 
@@ -197,69 +205,78 @@ public class VentanaPrincipal {
 		panelSuperior.add(panelEspacioDerecha, settings);
 
 		// *******************************************************************************
-		// PABLO Y RUBEN
+		// PABLO Y JOSE
 		// panel de texto y componente
 		panelTexto = new JPanel();
 		panelTexto.setLayout(new GridBagLayout());
 		panelTexto.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
-		//Jtextfield para el texto
+		// Jtextfield para el texto
 		jtextFieldTexto = new JTextField();
-		
+		settings = new GridBagConstraints();
+		settings.gridwidth = 3;
+		settings.gridx = 1;
+		settings.gridy = 0;
+		settings.fill = GridBagConstraints.HORIZONTAL;
+		panelTexto.add(jtextFieldTexto, settings);
+
 		// Herramienta para crear texto
 		botonTexto = new JButton(cargarIconoBoton("Imagenes/texto.png"));
 		settings = new GridBagConstraints();
 		settings.gridx = 0;
 		settings.gridy = 0;
-		settings.gridheight = 2;
+		settings.gridheight = 3;
 		settings.fill = GridBagConstraints.BOTH;
 		settings.insets = new Insets(1, 1, 1, 1);
 		panelTexto.add(botonTexto, settings);
 
 		// labels del componente
-		labelEstiloLetra = new JLabel("Fuente");
+		labelFuenteLetra = new JLabel("Fuente");
 		settings = new GridBagConstraints();
 		settings.gridx = 1;
-		settings.gridy = 0;
+		settings.gridy = 1;
 		settings.gridheight = 1;
 		settings.fill = GridBagConstraints.BOTH;
 		settings.insets = new Insets(1, 1, 1, 1);
-		panelTexto.add(labelEstiloLetra, settings);
+		panelTexto.add(labelFuenteLetra, settings);
 
 		labelTamanioLetra = new JLabel("Tamaño");
 		settings = new GridBagConstraints();
 		settings.gridx = 2;
-		settings.gridy = 0;
+		settings.gridy = 1;
 		settings.gridheight = 1;
 		settings.insets = new Insets(1, 1, 1, 1);
 		panelTexto.add(labelTamanioLetra, settings);
 
-		labelTipoLetra = new JLabel("Tipo");
+		labelEstiloLetra = new JLabel("Estilo");
 		settings = new GridBagConstraints();
 		settings.gridx = 3;
-		settings.gridy = 0;
+		settings.gridy = 1;
 		settings.gridheight = 1;
 		settings.insets = new Insets(1, 1, 1, 1);
-		panelTexto.add(labelTipoLetra, settings);
+		panelTexto.add(labelEstiloLetra, settings);
 
 		// jComboBox del componente
-		comboBoxFuenteLetra = new JComboBox(fuetesLetras());
+		comboBoxFuenteLetra = new JComboBox(fuentesLetras());
 		settings = new GridBagConstraints();
 		settings.gridx = 1;
-		settings.gridy = 1;
+		settings.gridy = 2;
 		settings.gridheight = 1;
 		settings.insets = new Insets(1, 1, 1, 1);
 		panelTexto.add(comboBoxFuenteLetra, settings);
 
+		// relleno del comboBox del tamaño de letra
 		tamanioLetra = new String[100];
 		for (int i = 0; i < 100; i++) {
-				tamanioLetra[i] = "" + (i+1);
-			
+			tamanioLetra[i] = "" + (i + 1);
+
 		}
 		comboBoxTamanioLetra = new JComboBox(tamanioLetra);
+		comboBoxTamanioLetra.setSelectedIndex(11); // sale por defecto el tamaño
+													// 12
 		settings = new GridBagConstraints();
 		settings.gridx = 2;
-		settings.gridy = 1;
+		settings.gridy = 2;
 		settings.gridheight = 1;
 		settings.insets = new Insets(1, 1, 1, 1);
 		panelTexto.add(comboBoxTamanioLetra, settings);
@@ -267,11 +284,12 @@ public class VentanaPrincipal {
 		comboBoxTipoLetra = new JComboBox(estiloLetra);
 		settings = new GridBagConstraints();
 		settings.gridx = 3;
-		settings.gridy = 1;
+		settings.gridy = 2;
 		settings.gridheight = 1;
 		settings.insets = new Insets(1, 1, 1, 1);
 		panelTexto.add(comboBoxTipoLetra, settings);
 
+		// insertar panel de texto en el panel superior
 		settings = new GridBagConstraints();
 		settings.gridx = 5;
 		settings.gridy = 0;
@@ -279,7 +297,7 @@ public class VentanaPrincipal {
 		panelSuperior.add(panelTexto, settings);
 
 		// **************************************************************************FIN
-		// PABLO Y RUBEN
+		// FIN PABLO Y JOSE
 
 		// ***************************
 		// EL LIENZO DONDE PINTAMOS.
@@ -299,7 +317,6 @@ public class VentanaPrincipal {
 	 * MÃ©todo que inicializa todos los listeners del programa.
 	 */
 	public void inicializarListeners() {
-		
 
 		// LÃ­stener de carga de VentanaPrincipal. Cuando se carga la pantalla
 		// es cuando se puede inicializar el canvas.
@@ -317,6 +334,14 @@ public class VentanaPrincipal {
 			}
 		});
 
+		botonTexto.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				establecerFuenteCampoTexto(e);
+			}
+		});
+
 		/**
 		 * Cada nueva herramienta que aÃ±adas, tendrÃ¡ un nuevo lÃ­stener:
 		 */
@@ -326,7 +351,7 @@ public class VentanaPrincipal {
 		botonTexto.addActionListener(anadirListenerHerramienta(TEXTO));
 
 		lienzo.addMouseListener(new MouseAdapter() {
-			
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// Dependiendo de la herramienta...
@@ -500,50 +525,53 @@ public class VentanaPrincipal {
 		graficos.fillOval(e.getX() - (strokeGOMA / 2), e.getY() - (strokeGOMA / 2), strokeGOMA, strokeGOMA);
 		graficos.dispose();
 	}
-	private void incluirCampotexto(MouseEvent e){
-		Graphics graficos = canvas.getGraphics();
-		Font fuente;
+	/**
+	 * cuando se hace clic en el botonTexto se establece la fuente con el estilo, tipo y tamanio en el campo jtextField
+	 * asignar a la variable fuente sus valores
+	 * @param e
+	 */
+	public void establecerFuenteCampoTexto(ActionEvent e) {
 		int tipofuente = 0;
 		
-		//por defecto se establece la fuente, tamaño y tipo de letra
-		if (fuenteLetraComboBox == null ) {
-			fuenteLetraComboBox = comboBoxFuenteLetra.getItemAt(0).toString();
+		// por defecto se establece la fuente, tamaño y tipo de letra
+		if (fuenteLetraComboBox == null) {
+			fuenteLetraComboBox = comboBoxFuenteLetra.getSelectedItem().toString();
 		}
 		if (tamanioLetraComboBox == null) {
-			tamanioLetraComboBox = comboBoxTamanioLetra.getItemAt(0).toString();
+			tamanioLetraComboBox = comboBoxTamanioLetra.getSelectedItem().toString();
 		}
-		if (tipoLetraComboBox == null) {
-			tipoLetraComboBox = ""+0;
+		if (estiloLetraComboBox == null) {
+			estiloLetraComboBox = "" + 0;
 		}
-		//escucho el comboBox de fuente de letra
+		// escucho el comboBox de fuente de letra
 		comboBoxFuenteLetra.addItemListener(new ItemListener() {
-			
+
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				fuenteLetraComboBox = e.getItem().toString();
-				
+
 			}
 		});
-		//escucho el comboBox del tamanio de letra
+		// escucho el comboBox del tamanio de letra
 		comboBoxTamanioLetra.addItemListener(new ItemListener() {
-			
+
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				tamanioLetraComboBox = e.getItem().toString();
-				
+
 			}
 		});
-		//escucho el comboBox del tipo de letra
+		// escucho el comboBox del tipo de letra
 		comboBoxTipoLetra.addItemListener(new ItemListener() {
-			
+
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				tipoLetraComboBox = e.getItem().toString();
-				
+				estiloLetraComboBox = e.getItem().toString();
+
 			}
 		});
-		//dependiendo del estilo de letra
-		switch (tipoLetraComboBox) {
+		// dependiendo del estilo de letra
+		switch (estiloLetraComboBox) {
 		case "Normal":
 			tipofuente = 0;
 			break;
@@ -554,18 +582,29 @@ public class VentanaPrincipal {
 			tipofuente = 2;
 			break;
 		}
-		//creamo una fuente nueva
+		// creamo una fuente nueva
 		fuente = new Font(fuenteLetraComboBox, tipofuente, Integer.parseInt(tamanioLetraComboBox));
 		jtextFieldTexto.setFont(fuente);
-		jtextFieldTexto.setOpaque(false);
-		
-		
-		
-		
-		
+		//cambiar el fondo de texto del jtextField
+		jtextFieldTexto.setForeground(selector1.getColor());
+
 	}
 
-	private String[] fuetesLetras() {
+	/**
+	 * Incluye en el lienzo la fuente elegida	 
+	 * @param e listener del boton
+	 * 
+	 */
+	// incluir el campo texto en el lienzo
+	private void incluirCampotexto(MouseEvent e) {
+		Graphics graficos = canvas.getGraphics();
+		graficos.setColor(selector1.getColor());
+		graficos.setFont(fuente);
+		graficos.drawString(jtextFieldTexto.getText(), e.getX(), e.getY());
+
+	}
+
+	private String[] fuentesLetras() {
 
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		String[] fuentes = ge.getAvailableFontFamilyNames();
