@@ -75,6 +75,7 @@ public class VentanaPrincipal {
 	BufferedImage canvasMouseMotion;
 	BufferedImage canvasDibujado;
 	
+
 	//Grupo Linea:
 		final static int LINEA = 2;
 		final static int CUADRADO = 3;
@@ -93,6 +94,9 @@ public class VentanaPrincipal {
 	//FinGrupoLinea	
 	
 	//Constructor, marca el tamaÃ±o y el cierre del frame
+
+	//Constructor, marca el tamaño y el cierre del frame
+
 	public VentanaPrincipal() {
 		ventana = new JFrame();
 		ventana.setBounds(100, 50, 800, 600);
@@ -361,7 +365,9 @@ public class VentanaPrincipal {
 				repintarLienzo();
 			}
 			
+
 	
+
 			@Override
 			public void mouseExited(MouseEvent e) {
 				borrarCanvasMouseMotion();
@@ -401,7 +407,6 @@ public class VentanaPrincipal {
 				/** OJO **/
 				repintarLienzo();
 			}
-		
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
@@ -409,6 +414,7 @@ public class VentanaPrincipal {
 				case GOMA:
 					gomaMouseMoved(e);
 					break;
+
 				default:
 					break;
 				}				
@@ -539,9 +545,10 @@ public class VentanaPrincipal {
 				strokeGOMA);
 		graficos.dispose();
 	}
+
 	
 	/**
-	 * MÃ©todo que pinta el movimiento de la goma de borrar. Este mÃ©todo utiliza un canvas auxiliar, de tal modo que no se pinte el canvas original
+	 * Método que pinta el movimiento de la goma de borrar. Este método utiliza un canvas auxiliar, de tal modo que no se pinte el canvas original
 	 * @param e
 	 */
 	private void gomaMouseMoved(MouseEvent e){
@@ -556,10 +563,10 @@ public class VentanaPrincipal {
 	}
 	
 	/**
-	 * Con la inclusiÃ³n del canvas auxiliar para mouseMotion, el mÃ©todo repintarLienzo es necesario.
-	 * Lo que hace este mÃ©todo es pintar sobre el canvas otros dos BufferedImage:
+	 * Con la inclusión del canvas auxiliar para mouseMotion, el método repintarLienzo es necesario.
+	 * Lo que hace este método es pintar sobre el canvas otros dos BufferedImage:
 	 * 		--> canvasDibujado: Es el canvas en el cual se encuentran los dibujos. Estos siempre se mantienen a lo largo del tiempo.
-	 * 		--> canvasMouseMotion: Es el canvas que se refresca cada vez que se mueve el ratÃ³n
+	 * 		--> canvasMouseMotion: Es el canvas que se refresca cada vez que se mueve el ratón
 	 */
 	private void repintarLienzo(){
 		Graphics graficos = canvas.getGraphics();
@@ -567,7 +574,6 @@ public class VentanaPrincipal {
 		graficos.drawImage(canvasMouseMotion, 0, 0, null);
 		lienzo.repaint();
 	}
-	
 	
 	
 
