@@ -23,13 +23,15 @@ public class pintaSpray extends Thread {
 	@Override
 	public void run() {
 		while (VentanaPrincipal.sprayBotonPulsado) {
-			Graphics graficos = ventana.canvas.getGraphics();
+			Graphics graficos = ventana.canvasDibujado.getGraphics();
 			graficos.setColor(ventana.selector1.getColor());
 			double angulo = Math.random() * Math.PI * 2;
+			double radio = Math.random() * ventana.strokeGOMA;
 			int posXSpray = (int) (Math.cos(angulo) * radio);
 			int posYSpray = (int) (Math.sin(angulo) * radio);
 			graficos.fillOval(x + posXSpray, y + posYSpray, 3, 3);
-			ventana.lienzo.repaint();
+			
+			ventana.repintarLienzo();
 			try {
 				sleep(3);
 			} catch (InterruptedException e1) {
