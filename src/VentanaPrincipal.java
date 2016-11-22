@@ -58,7 +58,6 @@ public class VentanaPrincipal {
 	JButton botonNuevo;
 	JButton botonBoligrafo;
 	JButton botonGoma;
-	JButton botonSpray;
 
 	// VARIABLES PROPIAS DE CADA GRUPO:
 	// Grupo JesÃºs:
@@ -68,6 +67,7 @@ public class VentanaPrincipal {
 	// Grupo spray
 	static boolean sprayBotonPulsado;
 	pintaSpray spray;
+	JButton botonSpray;
 
 	// Constructor, marca el tamaÃ±o y el cierre del frame
 	public VentanaPrincipal() {
@@ -232,6 +232,7 @@ public class VentanaPrincipal {
 
 				case GOMA:
 					borraGoma(e);
+					break;
 				case SPRAY:
 
 					sprayBotonPulsado = true;
@@ -264,8 +265,6 @@ public class VentanaPrincipal {
 				/** OJO **/
 				lienzo.repaint();
 			}
-			
-			
 
 		});
 
@@ -281,11 +280,11 @@ public class VentanaPrincipal {
 
 				case GOMA:
 					borraGoma(e);
-					
+
 					break;
 				case SPRAY:
 					spray.cambiarCordenadas(e.getX(), e.getY());
-					
+
 					break;
 
 				default:
@@ -297,14 +296,10 @@ public class VentanaPrincipal {
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				
+
 			}
-			
-			
 
 		});
-		
-		
 
 	}
 
@@ -411,8 +406,6 @@ public class VentanaPrincipal {
 		graficos.fillOval(e.getX() - (strokeGOMA / 2), e.getY() - (strokeGOMA / 2), strokeGOMA, strokeGOMA);
 		graficos.dispose();
 	}
-
-
 
 	private void sprayPressed(MouseEvent e) {
 		spray = new pintaSpray(this, e);
