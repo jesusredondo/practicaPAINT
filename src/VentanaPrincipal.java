@@ -91,7 +91,7 @@ public class VentanaPrincipal {
 	private JLabel botonGrosor;
 
 	private JComboBox ComboGrosor;
-	String opciones [] ={"2px","5px","10px","20px","30px","40px", "50px","superGoma"};
+	String opciones [] ={"2px","5px","10px","20px","30px","40px", "50px","Tamaño XXL"};
 	MouseEvent event;
 
 	// Constructor, marca el tamaÃ±o y el cierre del frame
@@ -456,7 +456,7 @@ public class VentanaPrincipal {
 			strokeGOMA=50;
 			break;
 		}
-		case "superGoma":{
+		case "Tamaño XXL":{
 			strokeGOMA=1000;
 			break;
 		}
