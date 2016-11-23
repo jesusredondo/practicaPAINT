@@ -4,14 +4,14 @@ import java.awt.image.BufferedImage;
 
 public class pintaSpray extends Thread {
 
-	MouseEvent e;
+	
 	VentanaPrincipal ventana;
 	int x;
 	int y;
 
-	public pintaSpray(VentanaPrincipal ventana, MouseEvent e) {
+	public pintaSpray(VentanaPrincipal ventana) {
 		this.ventana = ventana;
-		this.e = e;
+		
 	}
 
 	public void cambiarCordenadas(int posX, int posY) {
@@ -26,7 +26,7 @@ public class pintaSpray extends Thread {
 			Graphics graficos = ventana.canvasDibujado.getGraphics();
 			graficos.setColor(ventana.selector1.getColor());
 			double angulo = Math.random() * Math.PI * 2;
-			double radio = Math.random() * ventana.strokeGOMA;
+			double radio = Math.sqrt(Math.random() * (ventana.strokeGOMA*ventana.strokeGOMA));
 			int posXSpray = (int) (Math.cos(angulo) * radio);
 			int posYSpray = (int) (Math.sin(angulo) * radio);
 			graficos.fillOval(x + posXSpray, y + posYSpray, 3, 3);

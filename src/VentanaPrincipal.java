@@ -26,17 +26,20 @@ import javax.swing.border.TitledBorder;
 
 public class VentanaPrincipal {
 
-	final int strokeGOMA = 10;
+	static int strokeGOMA = 10;
 
 	/**
 	 * IMPORTANTE: CADA HERRAMIENTA TENDRÃ� UN CÃ“DIGO ASOCIADO
 	 */
 	final static int BOLIGRAFO = 0;
 	final static int GOMA = 1;
-	final static int SPRAY = 2;
+	
 	// AÃ‘ADE AQUÃ� TU HERRAMIENTA;
 	// TODO: AÃ±adir la herramienta
-
+	
+	final static int SPRAY = 2;
+	
+	
 	int herramientaActual = -1; // No hay nada por defecto.
 
 	// La ventana principal, en este caso, guarda todos los componentes:
@@ -455,7 +458,7 @@ public class VentanaPrincipal {
 
 
 	private void sprayPressed(MouseEvent e) {
-		spray = new pintaSpray(this, e);
+		spray = new pintaSpray(this);
 		spray.cambiarCordenadas(e.getX(), e.getY());
 		spray.start();
 	}
