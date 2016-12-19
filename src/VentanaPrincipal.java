@@ -44,7 +44,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
-
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import javax.swing.filechooser.FileFilter;
@@ -54,7 +53,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class VentanaPrincipal {
 
-	  static int strokeGOMA = 10;
+	static int strokeGOMA = 10;
+
 
 	/**
 	 * IMPORTANTE: CADA HERRAMIENTA TENDRÃ� UN CÃ“DIGO ASOCIADO
@@ -62,18 +62,15 @@ public class VentanaPrincipal {
 	final static int BOLIGRAFO = 0;
 	final static int GOMA = 1;
 
-	// AÃ‘ADE AQUÃ� TU HERRAMIENTA;
-	// TODO: AÃ±adir la herramienta
-
-	int herramientaActual = -1; // No hay nada por defecto.
-
 	// La ventana principal, en este caso, guarda todos los componentes:
 
 	//AÃ‘ADE AQUÃ� TU HERRAMIENTA;
-	//TODO: AÃ±adir la herramienta	
-	final static int INSERTAR_IMAGEN = 2;
+	//TODO: AÃ±adir la herramienta;
+
+	final static int SPRAY = 2;
+	final static int INSERTAR_IMAGEN = 3;
 	
-	
+	int herramientaActual = -1; // No hay nada por defecto.
 
 	JFrame ventana;
 
@@ -106,9 +103,9 @@ public class VentanaPrincipal {
 
 	// VARIABLES PROPIAS DE CADA GRUPO:
 	// Grupo JesÃºs:
-
 	int xAnt;
 	int yAnt;
+
 
 
 	// Variables para el grosos del lapiz
@@ -117,6 +114,11 @@ public class VentanaPrincipal {
 	private JComboBox ComboGrosor;
 	String opciones [] ={"2px","5px","10px","20px","30px","40px", "50px","Tamaño XXL"};
 	MouseEvent event;
+
+	// Grupo spray
+	static boolean sprayBotonPulsado;
+	pintaSpray spray;
+	JButton botonSpray;
 
 	// Constructor, marca el tamaÃ±o y el cierre del frame
 
@@ -127,6 +129,7 @@ public class VentanaPrincipal {
 	JButton botonSeleccionarImagen;
 	BufferedImage img;
 	
+	//Constructor, marca el tamaño y el cierre del frame
 
 	public VentanaPrincipal() {
 		ventana = new JFrame();
@@ -199,7 +202,7 @@ public class VentanaPrincipal {
 		settings.fill = GridBagConstraints.BOTH;
 		panelSuperior.add(selector2, settings);
 
-		//Herramienta de bolÃ­grafo
+		// Herramienta de bolÃ­grafo
 
 		botonBoligrafo = new JButton(cargarIconoBoton("Imagenes/boligrafo.png"));
 		settings = new GridBagConstraints();
@@ -221,35 +224,35 @@ public class VentanaPrincipal {
 		 */
 
 		// TODO: Insertar un botÃ³n e implementar mi herramienta.
-
+    // Herramienta de Spray
+		botonSpray = new JButton(cargarIconoBoton("Imagenes/spray.png"));
+		settings = new GridBagConstraints();
+		settings.gridx = 5;
+		settings.gridy = 0;
+		settings.insets = new Insets(0, 10, 0, 0);
+		panelSuperior.add(botonSpray, settings);
+    
 		ComboGrosor = new JComboBox(opciones);
 		settings = new GridBagConstraints();
-		settings.gridx = 5;/*** OJO ***/
+		settings.gridx = 6;/*** OJO ***/
 		settings.gridy = 0;
 		settings.insets = new Insets(0, 10, 0, 0);
 		panelSuperior.add(ComboGrosor,settings);
 		
-		
 		botonSeleccionarImagen = new JButton(cargarIconoBoton("Imagenes/Icono_imagen.png"));
-		settings = new GridBagConstraints();
-		settings.gridx = 6; /*** OJO ***/
-		settings.gridy = 0;
-		settings.insets = new Insets(0, 10, 0, 0);
-		panelSuperior.add(botonSeleccionarImagen, settings);
-		
-		
-		
-		
-		//Un elemento que ocupe todo el espacio a la derecha:
-		JPanel panelEspacioDerecha = new JPanel();
 		settings = new GridBagConstraints();
 		settings.gridx = 7; /*** OJO ***/
 		settings.gridy = 0;
+		settings.insets = new Insets(0, 10, 0, 0);
+		panelSuperior.add(botonSeleccionarImagen, settings);
+
+		// Un elemento que ocupe todo el espacio a la derecha:
+		JPanel panelEspacioDerecha = new JPanel();
+		settings = new GridBagConstraints();
+		settings.gridx = 8; /*** OJO ***/
+		settings.gridy = 0;
 		settings.weightx = 1;
 		panelSuperior.add(panelEspacioDerecha, settings);
-
-		
-		
 
 		// ***************************
 		// EL LIENZO DONDE PINTAMOS.
@@ -279,16 +282,11 @@ public class VentanaPrincipal {
 				superGoma(Auxiliar.getSelectedItem().toString());
 				}
 		});
-
 		
-		
-		
-
 		// LÃ­stener de carga de VentanaPrincipal. Cuando se carga la pantalla
 		// es cuando se puede inicializar el canvas.
 
-		//LÃ­stener de carga de VentanaPrincipal. Cuando se carga la pantalla es cuando se puede inicializar el canvas.
-
+		//LÃ­stener de carga de VentanaPrincipal. Cuando se carga la pantalla es cuando se puede inicializar el ca
 		ventana.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowOpened(WindowEvent e) {
@@ -308,13 +306,9 @@ public class VentanaPrincipal {
 		 */
 		botonBoligrafo.addActionListener(anadirListenerHerramienta(BOLIGRAFO));
 		botonGoma.addActionListener(anadirListenerHerramienta(GOMA));
-
-		// TODO: AÃ±adir nuevos listeners para las herramientas:
-
-
-		//TODO: AÃ±adir nuevos listeners para las herramientas:
+    //TODO: AÃ±adir nuevos listeners para las herramientas:
 		botonSeleccionarImagen.addActionListener(anadirListenerHerramienta(INSERTAR_IMAGEN));
-		
+		botonSpray.addActionListener(anadirListenerHerramienta(SPRAY));
 
 		lienzo.addMouseListener(new MouseAdapter() {
 
@@ -331,11 +325,14 @@ public class VentanaPrincipal {
 					break;
 				case INSERTAR_IMAGEN:
 					insertarSeleccionarImagen(e);
+        case SPRAY:
+					sprayBotonPulsado = true;
+					sprayPressed(e);
 					break;
 				default:
 					break;
 				}
-
+        
 				repintarLienzo();
 			}
 
@@ -344,15 +341,14 @@ public class VentanaPrincipal {
 				// Dependiendo de la herramienta...
 				switch (herramientaActual) {
 				case BOLIGRAFO:
-
 					mouseDraggedBoligrafo(e); //Me vale este mÃ©todo
-
 					break;
-
 				case GOMA:
 					borraGoma(e);
 					break;
-
+				case SPRAY:
+					sprayBotonPulsado = false;
+					break;
 				default:
 					break;
 				}
@@ -380,11 +376,17 @@ public class VentanaPrincipal {
 
 				case GOMA:
 					borraGoma(e);
+
+					break;
+        case SPRAY:
+					spray.cambiarCordenadas(e.getX(), e.getY());
+
 					break;
 
 				case INSERTAR_IMAGEN:
 					insertarSeleccionarImagen(e);
-					break;
+
+				
 
 				default:
 					break;
@@ -414,17 +416,14 @@ public class VentanaPrincipal {
 	}
 
 	/**
-<<<<<<< HEAD
+
 	 * MÃ©todo que Borra el canvas para pintarlo completamente en Blanco. El
 	 * nuevo canvas se adapta al tamanio del lienzo.
-=======
-	 * MÃ©todo que Borra el canvas para pintarlo completamente en Blanco.
-	 * El nuevo canvas se adapta al tamanio del lienzo.
->>>>>>> origin/master
 	 */
 	public void borrarCanvas() {
 		canvas = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		lienzo.setIcon(new ImageIcon(canvas));
+
 
 		Graphics graficos = canvas.getGraphics();
 
@@ -433,31 +432,29 @@ public class VentanaPrincipal {
 		borrarCanvasMouseMotion();
 		
 		//Modificado para el mouseMotion
-		Graphics graphics = canvasDibujado.getGraphics();
-		graphics.setColor(selector2.getColor());
-		graphics.fillRect(0, 0, panelInferior.getWidth(), panelInferior.getHeight());
-		graphics.dispose();
+		Graphics graficos = canvasDibujado.getGraphics();
+		graficos.setColor(selector2.getColor());
+		graficos.fillRect(0, 0, panelInferior.getWidth(), panelInferior.getHeight());
+		graficos.dispose();
 		repintarLienzo();
 		
 		
 	}
+
 	
 	public void borrarCanvasMouseMotion(){
 		canvasMouseMotion = new BufferedImage(panelInferior.getWidth(), panelInferior.getHeight(), BufferedImage.TYPE_INT_ARGB);
 	}
 	
+
 	/**
 	 * MÃ©todo que nos devuelve un icono para la barra de herramientas superior.
-<<<<<<< HEAD
 	 * NOTA: SerÃ­a conveniente colocar una imagen con fondo transparente y que
 	 * sea cuadrada, para no estropear la interfaz.
 	 * 
 	 * @param rutaImagen:
 	 *            La ruta de la imagen.
-=======
-	 * NOTA: SerÃ­a conveniente colocar una imagen con fondo transparente y que sea cuadrada, para no estropear la interfaz.
-	 * @param rutaImagen: La ruta de la imagen.
->>>>>>> origin/master
+
 	 * @return El ImageIcon que se utilizarÃ¡ en un botÃ³n.
 	 */
 	public ImageIcon cargarIconoBoton(String rutaImagen) {
@@ -471,13 +468,9 @@ public class VentanaPrincipal {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * MÃ©todo que devuelve un actionListener que cambia la herramienta Actual a
 	 * la que se pasa por parÃ¡metros
 	 * 
-=======
-	 * MÃ©todo que devuelve un actionListener que cambia la herramienta Actual a la que se pasa por parÃ¡metros
->>>>>>> origin/master
 	 * @param herramienta
 	 * @return Un action listener que cambia la herramienta actual. Se puede
 	 *         utilizar sobre los botones, por ejemplo.
@@ -492,12 +485,8 @@ public class VentanaPrincipal {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * MÃ©todo que realiza todas las llamadas necesarias para inicializar la
 	 * ventana correctamente.
-=======
-	 * MÃ©todo que realiza todas las llamadas necesarias para inicializar la ventana correctamente.
->>>>>>> origin/master
 	 */
 	public void inicializar() {
 		ventana.setVisible(true);
@@ -523,14 +512,8 @@ public class VentanaPrincipal {
 
 	/**
 	 * Pinta la lÃ­nea del bolÃ­grafo al arrastrar.
-<<<<<<< HEAD
-	 * 
-=======
->>>>>>> origin/master
 	 * @param e
 	 */
-
-	
 
 	private void mouseDraggedBoligrafo(MouseEvent e){
 		Graphics graficos = canvasDibujado.getGraphics();
@@ -545,22 +528,13 @@ public class VentanaPrincipal {
 
 	/**
 	 * Borra donde estÃ© el ratÃ³n.
-<<<<<<< HEAD
-	 * 
-=======
->>>>>>> origin/master
 	 * @param e
 	 */
-
-	
 
 	private void borraGoma(MouseEvent e){
 		Graphics graficos = canvasDibujado.getGraphics();
 		graficos.setColor(selector2.getColor());
-		graficos.fillOval(e.getX()-(strokeGOMA/2), 
-				e.getY()-(strokeGOMA/2), 
-				strokeGOMA, 
-				strokeGOMA);
+		graficos.fillOval(e.getX() - (strokeGOMA / 2), e.getY() - (strokeGOMA / 2), strokeGOMA, strokeGOMA);
 		graficos.dispose();
 		
 	}
@@ -603,6 +577,13 @@ public class VentanaPrincipal {
 		
 	}
 
+
+	private void sprayPressed(MouseEvent e) {
+		spray = new pintaSpray(this);
+		spray.cambiarCordenadas(e.getX(), e.getY());
+		spray.start();
+	}
+
 	
 	/**
 	 * Selecciona o Inserta Imagen dependiendo de lo que pulse el usuario, 
@@ -643,7 +624,7 @@ public class VentanaPrincipal {
 	 * 		--> canvasDibujado: Es el canvas en el cual se encuentran los dibujos. Estos siempre se mantienen a lo largo del tiempo.
 	 * 		--> canvasMouseMotion: Es el canvas que se refresca cada vez que se mueve el ratón
 	 */
-	private void repintarLienzo(){
+	public void repintarLienzo(){
 		Graphics graficos = canvas.getGraphics();
 		graficos.drawImage(canvasDibujado, 0, 0, null);
 		graficos.drawImage(canvasMouseMotion, 0, 0, null);
